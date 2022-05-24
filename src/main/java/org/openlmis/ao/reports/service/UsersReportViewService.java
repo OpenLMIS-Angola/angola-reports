@@ -164,7 +164,7 @@ public class UsersReportViewService implements ConcreteReportView {
     return users.stream().filter(user ->
             containsIgnoreCase(user.getFirstName(), firstName)
                     && containsIgnoreCase(user.getLastName(), lastName)
-                    && containsIgnoreCase(user.getHomeFacilityId(), homeFacilityId))
+                    && containsIgnoreCase(user.getHomeFacilityId().toString(), homeFacilityId))
             .collect(Collectors.toList());
   }
 
