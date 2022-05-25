@@ -15,7 +15,6 @@ import java.util.Map;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
-import org.apache.commons.lang3.StringUtils;
 
 import static net.sf.jasperreports.engine.JRParameter.REPORT_LOCALE;
 import static org.openlmis.ao.reports.dto.external.RequisitionLineItemDto.APPROVED_QUANTITY;
