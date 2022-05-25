@@ -33,7 +33,7 @@ public final class ReportUtils {
      */
   public static UUID getUuidParameter(Map<String,Object> parameters,String key){
     String  parameterUuid =  parameters.get(key).toString();
-    return StringUtils.isNotBlank(UUID) ? UUID.fromString(parameterUuid) : null;
+    return StringUtils.isNotBlank(parameterUuid) ? UUID.fromString(parameterUuid) : null;
   }
 
   /**
