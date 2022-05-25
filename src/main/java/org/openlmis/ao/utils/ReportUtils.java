@@ -28,10 +28,10 @@ public final class ReportUtils {
             ? "" : parameters.get(key).toString();
   }
 
-    /**
-     * Get UUID value of the string parameter, or an null  if empty.
-     */
-  public static UUID getUuidParameter(Map<String,Object> parameters,String key){
+  /**
+   * Get UUID value of the string parameter, or an null  if empty.
+   */
+  public static UUID getUuidParameter(Map<String,Object> parameters,String key) {
     String  parameterUuid =  parameters.get(key).toString();
     return StringUtils.isNotBlank(parameterUuid) ? UUID.fromString(parameterUuid) : null;
   }
