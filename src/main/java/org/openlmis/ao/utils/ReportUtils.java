@@ -6,13 +6,9 @@ import net.sf.jasperreports.engine.JRBand;
 import net.sf.jasperreports.engine.design.JRDesignTextField;
 import org.springframework.context.i18n.LocaleContextHolder;
 
-import java.util.Comparator;
-import java.util.HashMap;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Locale;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
+import org.apache.commons.lang3.StringUtils;
 
 import static net.sf.jasperreports.engine.JRParameter.REPORT_LOCALE;
 import static org.openlmis.ao.reports.dto.external.RequisitionLineItemDto.APPROVED_QUANTITY;
@@ -30,6 +26,14 @@ public final class ReportUtils {
   public static String getStringParameter(Map<String, Object> parameters, String key) {
     return parameters.get(key) == null
             ? "" : parameters.get(key).toString();
+  }
+
+    /**
+     * Get UUID value of the string parameter, or an null  if empty.
+     */
+  public static UUID getUuidParameter(Map<String,Object> parameters,String key){
+    String  parameterUuid =  parameters.get(key).toString();
+    return StringUtils.isNotBlank(UUID) ? UUID.fromString(parameterUuid) : null;
   }
 
   /**
