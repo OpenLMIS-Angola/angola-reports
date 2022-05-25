@@ -6,8 +6,15 @@ import net.sf.jasperreports.engine.JRBand;
 import net.sf.jasperreports.engine.design.JRDesignTextField;
 import org.springframework.context.i18n.LocaleContextHolder;
 
-import java.util.*;
+import java.util.Comparator;
+import java.util.HashMap;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Locale;
+import java.util.Map;
+import java.util.UUID;
 import java.util.stream.Collectors;
+
 import org.apache.commons.lang3.StringUtils;
 
 import static net.sf.jasperreports.engine.JRParameter.REPORT_LOCALE;
@@ -25,14 +32,14 @@ public final class ReportUtils {
    */
   public static String getStringParameter(Map<String, Object> parameters, String key) {
     return parameters.get(key) == null
-            ? "" : parameters.get(key).toString();
+        ? "" : parameters.get(key).toString();
   }
 
   /**
    * Get UUID value of the string parameter, or an null  if empty.
    */
-  public static UUID getUuidParameter(Map<String,Object> parameters,String key) {
-    String  parameterUuid =  parameters.get(key).toString();
+  public static UUID getUuidParameter(Map<String, Object> parameters, String key) {
+    String parameterUuid = parameters.get(key).toString();
     return StringUtils.isNotBlank(parameterUuid) ? UUID.fromString(parameterUuid) : null;
   }
 
@@ -51,6 +58,7 @@ public final class ReportUtils {
 
   /**
    * Sorts the map of requisition template columns by their display order, without 'skipped' column.
+   *
    * @param map map of column keys to columns.
    * @return sorted map.
    */
@@ -77,9 +85,10 @@ public final class ReportUtils {
 
   /**
    * Customizes template band to adjust columns order.
-   * @param band Jasper Report band to edit.
+   *
+   * @param band    Jasper Report band to edit.
    * @param columns map of requisition template columns.
-   * @param margin page margin, to adjust initial column positions.
+   * @param margin  page margin, to adjust initial column positions.
    */
   public static void customizeBandWithTemplateFields(
       JRBand band, Map<String, RequisitionTemplateColumnDto> columns, int width, int margin) {
@@ -88,14 +97,14 @@ public final class ReportUtils {
         .collect(Collectors.toList());
     List<JRDesignTextField> foundColumns = band.getChildren().stream()
         .filter(child -> child instanceof JRDesignTextField)
-        .map(child -> (JRDesignTextField)child)
+        .map(child -> (JRDesignTextField) child)
         .collect(Collectors.toList());
 
     double widthMultipier = getWidthMultipier(width, margin, foundTemplateKeys, foundColumns);
 
     JRDesignTextField prevField = null;
     for (String key : foundTemplateKeys) {
-      JRDesignTextField field = (JRDesignTextField)band.getElementByKey(key);
+      JRDesignTextField field = (JRDesignTextField) band.getElementByKey(key);
 
       field.setWidth((int) (field.getWidth() * widthMultipier));
       setPositionAfterPreviousField(field, prevField, margin);
@@ -117,7 +126,7 @@ public final class ReportUtils {
 
     if (toFill != 0) {
       int lineWidth = width - 2 * margin;
-      return (double)lineWidth / (lineWidth - toFill);
+      return (double) lineWidth / (lineWidth - toFill);
     }
     return 1;
   }
