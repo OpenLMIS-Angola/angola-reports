@@ -38,8 +38,7 @@ public final class ReportUtils {
    * Get UUID value of the string parameter, or an null  if empty.
    */
   public static UUID getUuidParameter(Map<String, Object> parameters, String key) {
-    String parameterUuid = parameters.get(key).toString();
-    return parameterUuid == null ? null : UUID.fromString(parameterUuid);
+    return parameterUuid == null ? null : UUID.fromString(parameters.get(key).toString());
   }
 
   /**
