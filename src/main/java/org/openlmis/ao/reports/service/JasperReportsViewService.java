@@ -378,8 +378,12 @@ public class JasperReportsViewService {
                                                       Map<String, Object> parameters) {
     LocalDate asOfDate = getAsOfDate(parameters);
     parameters.put(AS_OF_DATE, asOfDate);
-    List<String> programs = Arrays.asList(parameters.get(PROGRAM_ID).toString()
-        .replaceAll(";",",").split("\\s*,\\s*"));
+    Object program = parameters.get(PROGRAM_ID);
+    List<String> programs = new ArrayList<>();
+
+    if (program != null && StringUtils.isNotBlank(program.toString())) {
+      programs = Arrays.asList(program.toString().replaceAll(";",",").split("\\s*,\\s*"));
+    }
 
     FacilityDto facilityDto = getReferencedFacility(parameters);
 
