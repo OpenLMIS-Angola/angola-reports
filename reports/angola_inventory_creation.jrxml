@@ -295,8 +295,14 @@ java.time.format.DateTimeFormatter.ofPattern("yyyy.MM.dd").format(java.time.Loca
 					<plot>
 						<seriesColor seriesOrder="0" color="#3D739B"/>
 					</plot>
+					<categoryAxisLabelExpression><![CDATA["Time: " + java.time.format.DateTimeFormatter.ofPattern("yyyy.MM.dd").format(java.time.LocalDate.parse($P{startDate}.toString())) + " - " +
+java.time.format.DateTimeFormatter.ofPattern("yyyy.MM.dd").format(java.time.LocalDate.parse($P{endDate}.toString()))]]></categoryAxisLabelExpression>
 					<categoryAxisFormat>
-						<axisFormat labelColor="#000000" tickLabelColor="#FFFFFF" tickLabelMask="" axisLineColor="#000000"/>
+						<axisFormat labelColor="#000000" tickLabelColor="#FFFFFF" tickLabelMask="" axisLineColor="#000000">
+							<labelFont>
+								<font isBold="true"/>
+							</labelFont>
+						</axisFormat>
 					</categoryAxisFormat>
 					<valueAxisFormat>
 						<axisFormat labelColor="#000000" tickLabelColor="#000000" axisLineColor="#000000"/>
