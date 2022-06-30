@@ -123,7 +123,7 @@
 					<textElement>
 						<font size="12"/>
 					</textElement>
-					<textFieldExpression><![CDATA["Total Physical Inventories: " + $V{totalEventCount}]]></textFieldExpression>
+					<textFieldExpression><![CDATA["Total Physical Inventories: " + ($V{totalEventCount} != null ? $V{totalEventCount} : 0)]]></textFieldExpression>
 				</textField>
 			</band>
 		</groupHeader>
@@ -292,9 +292,11 @@ java.time.format.DateTimeFormatter.ofPattern("yyyy.MM.dd").format(java.time.Loca
 					</categorySeries>
 				</categoryDataset>
 				<linePlot>
-					<plot/>
+					<plot>
+						<seriesColor seriesOrder="0" color="#3D739B"/>
+					</plot>
 					<categoryAxisFormat>
-						<axisFormat labelColor="#000000" tickLabelColor="#000000" axisLineColor="#000000"/>
+						<axisFormat labelColor="#000000" tickLabelColor="#FFFFFF" tickLabelMask="" axisLineColor="#000000"/>
 					</categoryAxisFormat>
 					<valueAxisFormat>
 						<axisFormat labelColor="#000000" tickLabelColor="#000000" axisLineColor="#000000"/>
