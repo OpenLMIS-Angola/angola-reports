@@ -174,7 +174,7 @@
 		<band splitType="Stretch"/>
 	</background>
 	<pageHeader>
-		<band height="105" splitType="Stretch">
+		<band height="85" splitType="Stretch">
 			<property name="com.jaspersoft.studio.unit.height" value="px"/>
 			<staticText>
 				<reportElement positionType="FixRelativeToBottom" x="240" y="0" width="320" height="40" uuid="af8e209d-cf2a-49a1-8c8a-6213dca400ea">
@@ -209,6 +209,16 @@ java.time.format.DateTimeFormatter.ofPattern("yyyy.MM.dd").format(java.time.Loca
 				<reportElement x="0" y="0" width="50" height="50" uuid="e916dce2-a090-4a92-83ae-9c46792bcf61"/>
 				<imageExpression><![CDATA[getClass().getResourceAsStream($P{imagesDirectory} + "angola_crest.png")]]></imageExpression>
 			</image>
+			<staticText>
+				<reportElement x="60" y="0" width="160" height="60" uuid="ef86f48c-4262-468f-8f03-a019ee55ed23"/>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font size="8"/>
+				</textElement>
+				<text><![CDATA[REPÚBLICA DE ANGOLA
+MINISTÉRIO DA SAÚDE
+DIRECÇÃO NACIONAL DE MEDICAMENTOS E EQUIPAMENTOS
+PROGRAMA NACIONAL DE MEDICAMENTOS ESSENCIAIS]]></text>
+			</staticText>
 		</band>
 	</pageHeader>
 	<detail>
@@ -298,7 +308,7 @@ java.time.format.DateTimeFormatter.ofPattern("yyyy.MM.dd").format(java.time.Loca
 					<categoryAxisLabelExpression><![CDATA["Time: " + java.time.format.DateTimeFormatter.ofPattern("yyyy.MM.dd").format(java.time.LocalDate.parse($P{startDate}.toString())) + " - " +
 java.time.format.DateTimeFormatter.ofPattern("yyyy.MM.dd").format(java.time.LocalDate.parse($P{endDate}.toString()))]]></categoryAxisLabelExpression>
 					<categoryAxisFormat>
-						<axisFormat labelColor="#000000" tickLabelColor="#FFFFFF" tickLabelMask="" axisLineColor="#000000">
+						<axisFormat labelColor="#000000" tickLabelColor="#FFFFFF" axisLineColor="#000000">
 							<labelFont>
 								<font isBold="true"/>
 							</labelFont>
