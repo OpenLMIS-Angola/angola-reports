@@ -71,7 +71,7 @@
 			<![CDATA[select
 		eventDates::date as eventDate,
 		coalesce(events.eventCount, 0) as eventCount
-	FROM generate_series('2020-09-01'::timestamp, '2020-10-01'::timestamp - interval '1 day', '1 day'::interval) eventDates
+	FROM generate_series($P{startDate}::timestamp, $P{endDate}::timestamp - interval '1 day', '1 day'::interval) eventDates
 	left join (
 		select count(distinct se.id) as eventCount, se.processeddate::date as eventDate
 		from stockmanagement.stock_events se
@@ -99,7 +99,7 @@
 	from stockmanagement.stock_events se
 	join referencedata.facilities f on f.id = se.facilityid
 	left join stockmanagement.stock_event_line_items seli on seli.stockeventid = se.id
-	where se.processeddate >= '2020-9-01' and se.processeddate < '2020-10-01'
+	where se.processeddate::varchar >= $P{startDate}::varchar and se.processeddate::varchar < $P{endDate}::varchar
 	and se.id not in (
 		select pi.stockeventid from stockmanagement.physical_inventories pi
 		where pi.isdraft = false
@@ -126,7 +126,7 @@
 					<textElement>
 						<font size="12"/>
 					</textElement>
-					<textFieldExpression><![CDATA["Total Number of Adjustments: " + $V{totalEventCount}]]></textFieldExpression>
+					<textFieldExpression><![CDATA["Total Number of Adjustments: " + ($V{totalEventCount} != null ? $V{totalEventCount} : 0)]]></textFieldExpression>
 				</textField>
 			</band>
 		</groupHeader>
@@ -295,9 +295,11 @@ java.time.format.DateTimeFormatter.ofPattern("yyyy.MM.dd").format(java.time.Loca
 					</categorySeries>
 				</categoryDataset>
 				<linePlot>
-					<plot/>
+					<plot>
+						<seriesColor seriesOrder="0" color="#3D739B"/>
+					</plot>
 					<categoryAxisFormat>
-						<axisFormat labelColor="#000000" tickLabelColor="#000000" axisLineColor="#000000"/>
+						<axisFormat labelColor="#000000" tickLabelColor="#FFFFFF" axisLineColor="#000000"/>
 					</categoryAxisFormat>
 					<valueAxisFormat>
 						<axisFormat labelColor="#000000" tickLabelColor="#000000" axisLineColor="#000000"/>
