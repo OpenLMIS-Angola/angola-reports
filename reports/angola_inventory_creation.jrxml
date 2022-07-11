@@ -71,7 +71,7 @@
 			<![CDATA[select
 		eventDates::date as eventDate,
 		coalesce(events.eventCount, 0) as eventCount
-	FROM generate_series($P{startDate}::timestamp, $P{endDate}::timestamp - interval '1 day', '1 day'::interval) eventDates
+	FROM generate_series($P{startDate}::timestamp, $P{endDate}::timestamp, '1 day'::interval) eventDates
 	left join (
 		select count(se.id) as eventCount, se.processeddate::date as eventDate
 		from stockmanagement.stock_events se
@@ -94,14 +94,14 @@
 		<![CDATA[select
 				count(se.id) as eventCount,
 				f."name" as facilityName
-			from stockmanagement.stock_events se
-			join referencedata.facilities f on f.id = se.facilityid
-			where se.processeddate::varchar >= $P{startDate}::varchar
-				and se.processeddate::varchar < $P{endDate}::varchar
-				and se.id in (
-					select pi.stockeventid from stockmanagement.physical_inventories pi
-					where pi.isdraft = false
-				)
+				from stockmanagement.stock_events se
+				join referencedata.facilities f on f.id = se.facilityid
+				where se.processeddate::varchar >= $P{startDate}::varchar
+					and se.processeddate::varchar <= ($P{endDate}::timestamp + interval '1 day')::varchar
+					and se.id in (
+						select pi.stockeventid from stockmanagement.physical_inventories pi
+						where pi.isdraft = false
+					)
 			group by facilityName
 			order by eventCount desc]]>
 	</queryString>
