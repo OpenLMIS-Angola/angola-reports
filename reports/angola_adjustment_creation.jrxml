@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- Created with Jaspersoft Studio version 6.10.0.final using JasperReports Library version 6.10.0-unknown  -->
+<!-- Created with Jaspersoft Studio version 6.6.0.final using JasperReports Library version 6.6.0  -->
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="adjustment_creation" printOrder="Horizontal" pageWidth="842" pageHeight="595" orientation="Landscape" whenNoDataType="AllSectionsNoDetail" columnWidth="802" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" whenResourceMissingType="Error" uuid="548a4d5f-1cb0-4fa0-b5f9-40a07c579f42">
 	<property name="com.jaspersoft.studio.data.sql.SQLQueryDesigner.sash.w1" value="0"/>
 	<property name="com.jaspersoft.studio.data.sql.SQLQueryDesigner.sash.w2" value="1000"/>
-	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="AngolaDataAdapter.xml"/>
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="DataAdapter.xml"/>
 	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
 	<property name="net.sf.jasperreports.export.html.embed.image" value="true"/>
 	<property name="net.sf.jasperreports.print.keep.full.text" value="true"/>
@@ -71,7 +71,7 @@
 			<![CDATA[select
 		eventDates::date as eventDate,
 		coalesce(events.eventCount, 0) as eventCount
-	FROM generate_series($P{startDate}::timestamp, $P{endDate}::timestamp - interval '1 day', '1 day'::interval) eventDates
+	FROM generate_series($P{startDate}::timestamp, $P{endDate}::timestamp, '1 day'::interval) eventDates
 	left join (
 		select count(distinct se.id) as eventCount, se.processeddate::date as eventDate
 		from stockmanagement.stock_events se
@@ -99,7 +99,8 @@
 	from stockmanagement.stock_events se
 	join referencedata.facilities f on f.id = se.facilityid
 	left join stockmanagement.stock_event_line_items seli on seli.stockeventid = se.id
-	where se.processeddate::varchar >= $P{startDate}::varchar and se.processeddate::varchar < $P{endDate}::varchar
+	where se.processeddate::varchar >= $P{startDate}::varchar
+					and se.processeddate::varchar <= ($P{endDate}::timestamp + interval '1 day')::varchar
 	and se.id not in (
 		select pi.stockeventid from stockmanagement.physical_inventories pi
 		where pi.isdraft = false
@@ -281,6 +282,7 @@ PROGRAMA NACIONAL DE MEDICAMENTOS ESSENCIAIS]]></text>
 						<property name="com.jaspersoft.studio.unit.height" value="px"/>
 						<property name="com.jaspersoft.studio.unit.x" value="px"/>
 						<property name="com.jaspersoft.studio.unit.width" value="px"/>
+						<property name="net.sf.jasperreports.chart.range.axis.integer.unit" value="true"/>
 					</reportElement>
 					<chartTitle/>
 					<chartSubtitle/>
