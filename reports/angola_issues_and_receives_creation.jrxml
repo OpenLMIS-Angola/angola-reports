@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- Created with Jaspersoft Studio version 6.6.0.final using JasperReports Library version 6.6.0  -->
-<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="issues_and_receives_creation" printOrder="Horizontal" pageWidth="842" pageHeight="595" orientation="Landscape" whenNoDataType="AllSectionsNoDetail" columnWidth="802" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" whenResourceMissingType="Error" uuid="548a4d5f-1cb0-4fa0-b5f9-40a07c579f42">
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="adjustment_creation" printOrder="Horizontal" pageWidth="842" pageHeight="595" orientation="Landscape" whenNoDataType="AllSectionsNoDetail" columnWidth="802" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" whenResourceMissingType="Error" uuid="548a4d5f-1cb0-4fa0-b5f9-40a07c579f42">
 	<property name="com.jaspersoft.studio.data.sql.SQLQueryDesigner.sash.w1" value="0"/>
 	<property name="com.jaspersoft.studio.data.sql.SQLQueryDesigner.sash.w2" value="1000"/>
 	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="DataAdapter.xml"/>
@@ -68,9 +68,15 @@
 		<parameter name="startDate" class="java.lang.String"/>
 		<parameter name="endDate" class="java.lang.String"/>
 		<queryString language="SQL">
-			<![CDATA[select
+			<![CDATA[select 
+	distinct weekNumber,
+	weeklySum
+from
+(select
 		eventDates::date as eventDate,
-		coalesce(events.eventCount, 0) as eventCount
+		coalesce(events.eventCount, 0) as eventCount,
+		EXTRACT(WEEK FROM eventDates::date) AS weekNumber,
+		sum(coalesce(events.eventCount, 0)) over (PARTITION BY EXTRACT(week from eventDates::date)) as weeklySum
 	FROM generate_series($P{startDate}::timestamp, $P{endDate}::timestamp, '1 day'::interval) eventDates
 	left join (
 		select count(distinct se.id) as eventCount, se.processeddate::date as eventDate
@@ -81,12 +87,13 @@
 			select pi.stockeventid from stockmanagement.physical_inventories pi
 			where pi.isdraft = false
 		)
-		and (seli.destinationid is not null or seli.sourceid is not null)
+		and seli.destinationid is null and seli.sourceid is null
 		group by eventDate
-	) events on events.eventDate = eventDates]]>
+	) events on events.eventDate = eventDates) as weeklyEvents
+	order by weeknumber]]>
 		</queryString>
-		<field name="eventDate" class="java.lang.String"/>
-		<field name="eventCount" class="java.lang.Integer"/>
+		<field name="weekNumber" class="java.lang.Integer"/>
+		<field name="weeklySum" class="java.lang.Integer"/>
 	</subDataset>
 	<parameter name="startDate" class="java.lang.String"/>
 	<parameter name="endDate" class="java.lang.String"/>
@@ -105,7 +112,7 @@
 		select pi.stockeventid from stockmanagement.physical_inventories pi
 		where pi.isdraft = false
 	)
-	and (seli.destinationid is not null or seli.sourceid is not null)
+	and seli.destinationid is null and seli.sourceid is null
 	group by facilityName
 	order by eventCount desc]]>
 	</queryString>
@@ -127,7 +134,7 @@
 					<textElement>
 						<font size="12"/>
 					</textElement>
-					<textFieldExpression><![CDATA["Total Number of Issues and Receipts: " + ($V{totalEventCount} != null ? $V{totalEventCount} : 0)]]></textFieldExpression>
+					<textFieldExpression><![CDATA["Número Total de Ajustes: " + ($V{totalEventCount} != null ? $V{totalEventCount} : 0)]]></textFieldExpression>
 				</textField>
 			</band>
 		</groupHeader>
@@ -156,7 +163,7 @@
 					<textElement verticalAlignment="Middle">
 						<font isBold="true"/>
 					</textElement>
-					<text><![CDATA[Facility]]></text>
+					<text><![CDATA[Instituição]]></text>
 				</staticText>
 				<staticText>
 					<reportElement x="420" y="0" width="380" height="30" uuid="a9c37d49-9c60-4328-baaa-94a02efe13be">
@@ -169,7 +176,7 @@
 					<textElement textAlignment="Left" verticalAlignment="Middle">
 						<font isBold="true"/>
 					</textElement>
-					<text><![CDATA[Number of Issues and Receipts]]></text>
+					<text><![CDATA[Número de Ajustes]]></text>
 				</staticText>
 			</band>
 		</groupHeader>
@@ -189,7 +196,7 @@
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font size="18" isBold="true"/>
 				</textElement>
-				<text><![CDATA[Issues and Receipts Per Period]]></text>
+				<text><![CDATA[Ajustes por Período]]></text>
 			</staticText>
 			<textField>
 				<reportElement x="680" y="0" width="80" height="20" uuid="d2a693cf-48f0-4536-bd99-e9d7a04012a8"/>
@@ -214,7 +221,7 @@ java.time.format.DateTimeFormatter.ofPattern("yyyy.MM.dd").format(java.time.Loca
 				<imageExpression><![CDATA[getClass().getResourceAsStream($P{imagesDirectory} + "angola_crest.png")]]></imageExpression>
 			</image>
 			<staticText>
-				<reportElement x="60" y="0" width="160" height="60" uuid="1026c785-7790-49cb-8758-0ecacd172526"/>
+				<reportElement x="60" y="0" width="160" height="60" uuid="ef39c371-4e36-48c3-aa32-eef21440fc70"/>
 				<textElement textAlignment="Left" verticalAlignment="Middle">
 					<font size="8"/>
 				</textElement>
@@ -277,7 +284,7 @@ PROGRAMA NACIONAL DE MEDICAMENTOS ESSENCIAIS]]></text>
 			<property name="com.jaspersoft.studio.unit.height" value="px"/>
 			<lineChart>
 				<chart isShowLegend="false" evaluationTime="Report">
-					<reportElement x="25" y="20" width="765" height="380" uuid="2a9e6389-7178-41ac-92f5-a483e377ce10">
+					<reportElement key="" x="25" y="20" width="765" height="380" isRemoveLineWhenBlank="true" isPrintInFirstWholeBand="true" uuid="e0c9baea-fcf5-402e-ae79-c0a82e0d9331">
 						<property name="com.jaspersoft.studio.unit.y" value="px"/>
 						<property name="com.jaspersoft.studio.unit.height" value="px"/>
 						<property name="com.jaspersoft.studio.unit.x" value="px"/>
@@ -290,7 +297,7 @@ PROGRAMA NACIONAL DE MEDICAMENTOS ESSENCIAIS]]></text>
 				</chart>
 				<categoryDataset>
 					<dataset>
-						<datasetRun subDataset="InventoriesByDay" uuid="cc34b0bf-8696-4f99-916c-708877b18ff1">
+						<datasetRun subDataset="InventoriesByDay" uuid="8844a31b-1914-4eb8-80da-b49efd86a57a">
 							<datasetParameter name="startDate">
 								<datasetParameterExpression><![CDATA[$P{startDate}]]></datasetParameterExpression>
 							</datasetParameter>
@@ -302,11 +309,11 @@ PROGRAMA NACIONAL DE MEDICAMENTOS ESSENCIAIS]]></text>
 					</dataset>
 					<categorySeries>
 						<seriesExpression><![CDATA["SERIES 1"]]></seriesExpression>
-						<categoryExpression><![CDATA[$F{eventDate}]]></categoryExpression>
-						<valueExpression><![CDATA[$F{eventCount}]]></valueExpression>
+						<categoryExpression><![CDATA[$F{weekNumber}]]></categoryExpression>
+						<valueExpression><![CDATA[$F{weeklySum}]]></valueExpression>
 					</categorySeries>
 				</categoryDataset>
-				<linePlot>
+				<linePlot isShowShapes="true">
 					<plot>
 						<seriesColor seriesOrder="0" color="#3D739B"/>
 					</plot>
@@ -317,9 +324,6 @@ java.time.format.DateTimeFormatter.ofPattern("yyyy.MM.dd").format(java.time.Loca
 							<labelFont>
 								<font isBold="true"/>
 							</labelFont>
-							<tickLabelFont>
-								<font isBold="false"/>
-							</tickLabelFont>
 						</axisFormat>
 					</categoryAxisFormat>
 					<valueAxisFormat>
@@ -328,16 +332,16 @@ java.time.format.DateTimeFormatter.ofPattern("yyyy.MM.dd").format(java.time.Loca
 				</linePlot>
 			</lineChart>
 			<staticText>
-				<reportElement x="5" y="50" width="15" height="250" uuid="9e0c3ab6-ac5a-4bbf-a0ed-01ae70238f33">
+				<reportElement x="5" y="90" width="15" height="180" uuid="9e0c3ab6-ac5a-4bbf-a0ed-01ae70238f33">
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 					<property name="com.jaspersoft.studio.unit.x" value="px"/>
-					<property name="com.jaspersoft.studio.unit.y" value="px"/>
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					<property name="com.jaspersoft.studio.unit.y" value="px"/>
 				</reportElement>
 				<textElement rotation="Left" markup="none">
 					<font size="12" isBold="true"/>
 				</textElement>
-				<text><![CDATA[Total Number of Issues and Receipts]]></text>
+				<text><![CDATA[Número de Ajustes]]></text>
 			</staticText>
 		</band>
 	</summary>

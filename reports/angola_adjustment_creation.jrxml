@@ -68,9 +68,15 @@
 		<parameter name="startDate" class="java.lang.String"/>
 		<parameter name="endDate" class="java.lang.String"/>
 		<queryString language="SQL">
-			<![CDATA[select
+			<![CDATA[select 
+	distinct weekNumber,
+	weeklySum
+from
+(select
 		eventDates::date as eventDate,
-		coalesce(events.eventCount, 0) as eventCount
+		coalesce(events.eventCount, 0) as eventCount,
+		EXTRACT(WEEK FROM eventDates::date) AS weekNumber,
+		sum(coalesce(events.eventCount, 0)) over (PARTITION BY EXTRACT(week from eventDates::date)) as weeklySum
 	FROM generate_series($P{startDate}::timestamp, $P{endDate}::timestamp, '1 day'::interval) eventDates
 	left join (
 		select count(distinct se.id) as eventCount, se.processeddate::date as eventDate
@@ -83,10 +89,11 @@
 		)
 		and seli.destinationid is null and seli.sourceid is null
 		group by eventDate
-	) events on events.eventDate = eventDates]]>
+	) events on events.eventDate = eventDates) as weeklyEvents
+	order by weeknumber]]>
 		</queryString>
-		<field name="eventDate" class="java.lang.String"/>
-		<field name="eventCount" class="java.lang.Integer"/>
+		<field name="weekNumber" class="java.lang.Integer"/>
+		<field name="weeklySum" class="java.lang.Integer"/>
 	</subDataset>
 	<parameter name="startDate" class="java.lang.String"/>
 	<parameter name="endDate" class="java.lang.String"/>
@@ -127,7 +134,7 @@
 					<textElement>
 						<font size="12"/>
 					</textElement>
-					<textFieldExpression><![CDATA["Total Number of Adjustments: " + ($V{totalEventCount} != null ? $V{totalEventCount} : 0)]]></textFieldExpression>
+					<textFieldExpression><![CDATA["Número Total de Ajustes: " + ($V{totalEventCount} != null ? $V{totalEventCount} : 0)]]></textFieldExpression>
 				</textField>
 			</band>
 		</groupHeader>
@@ -156,7 +163,7 @@
 					<textElement verticalAlignment="Middle">
 						<font isBold="true"/>
 					</textElement>
-					<text><![CDATA[Facility]]></text>
+					<text><![CDATA[Instituição]]></text>
 				</staticText>
 				<staticText>
 					<reportElement x="420" y="0" width="380" height="30" uuid="a9c37d49-9c60-4328-baaa-94a02efe13be">
@@ -169,7 +176,7 @@
 					<textElement textAlignment="Left" verticalAlignment="Middle">
 						<font isBold="true"/>
 					</textElement>
-					<text><![CDATA[Number of Adjustments]]></text>
+					<text><![CDATA[Número de Ajustes]]></text>
 				</staticText>
 			</band>
 		</groupHeader>
@@ -189,7 +196,7 @@
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font size="18" isBold="true"/>
 				</textElement>
-				<text><![CDATA[Adjustments Per Period]]></text>
+				<text><![CDATA[Ajustes por Período]]></text>
 			</staticText>
 			<textField>
 				<reportElement x="680" y="0" width="80" height="20" uuid="d2a693cf-48f0-4536-bd99-e9d7a04012a8"/>
@@ -277,7 +284,7 @@ PROGRAMA NACIONAL DE MEDICAMENTOS ESSENCIAIS]]></text>
 			<property name="com.jaspersoft.studio.unit.height" value="px"/>
 			<lineChart>
 				<chart isShowLegend="false" evaluationTime="Report">
-					<reportElement x="25" y="20" width="765" height="380" uuid="2a9e6389-7178-41ac-92f5-a483e377ce10">
+					<reportElement key="" x="25" y="20" width="765" height="380" isRemoveLineWhenBlank="true" isPrintInFirstWholeBand="true" uuid="e0c9baea-fcf5-402e-ae79-c0a82e0d9331">
 						<property name="com.jaspersoft.studio.unit.y" value="px"/>
 						<property name="com.jaspersoft.studio.unit.height" value="px"/>
 						<property name="com.jaspersoft.studio.unit.x" value="px"/>
@@ -290,7 +297,7 @@ PROGRAMA NACIONAL DE MEDICAMENTOS ESSENCIAIS]]></text>
 				</chart>
 				<categoryDataset>
 					<dataset>
-						<datasetRun subDataset="InventoriesByDay" uuid="cc34b0bf-8696-4f99-916c-708877b18ff1">
+						<datasetRun subDataset="InventoriesByDay" uuid="8844a31b-1914-4eb8-80da-b49efd86a57a">
 							<datasetParameter name="startDate">
 								<datasetParameterExpression><![CDATA[$P{startDate}]]></datasetParameterExpression>
 							</datasetParameter>
@@ -302,11 +309,11 @@ PROGRAMA NACIONAL DE MEDICAMENTOS ESSENCIAIS]]></text>
 					</dataset>
 					<categorySeries>
 						<seriesExpression><![CDATA["SERIES 1"]]></seriesExpression>
-						<categoryExpression><![CDATA[$F{eventDate}]]></categoryExpression>
-						<valueExpression><![CDATA[$F{eventCount}]]></valueExpression>
+						<categoryExpression><![CDATA[$F{weekNumber}]]></categoryExpression>
+						<valueExpression><![CDATA[$F{weeklySum}]]></valueExpression>
 					</categorySeries>
 				</categoryDataset>
-				<linePlot>
+				<linePlot isShowShapes="true">
 					<plot>
 						<seriesColor seriesOrder="0" color="#3D739B"/>
 					</plot>
@@ -334,7 +341,7 @@ java.time.format.DateTimeFormatter.ofPattern("yyyy.MM.dd").format(java.time.Loca
 				<textElement rotation="Left" markup="none">
 					<font size="12" isBold="true"/>
 				</textElement>
-				<text><![CDATA[Number of Adjustments]]></text>
+				<text><![CDATA[Número de Ajustes]]></text>
 			</staticText>
 		</band>
 	</summary>
