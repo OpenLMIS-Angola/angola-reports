@@ -3,7 +3,7 @@
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="issue" pageWidth="595" pageHeight="842" orientation="Landscape" whenNoDataType="AllSectionsNoDetail" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" whenResourceMissingType="Error" uuid="548a4d5f-1cb0-4fa0-b5f9-40a07c579f42">
 	<property name="com.jaspersoft.studio.data.sql.SQLQueryDesigner.sash.w1" value="0"/>
 	<property name="com.jaspersoft.studio.data.sql.SQLQueryDesigner.sash.w2" value="1000"/>
-	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="DataAdapter.xml"/>
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="ANGOLA/DataAdapter.xml"/>
 	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
 	<property name="net.sf.jasperreports.export.html.embed.image" value="true"/>
 	<property name="net.sf.jasperreports.print.keep.full.text" value="true"/>
@@ -71,13 +71,17 @@
 		p."name" as programName,
 		o.fullproductname as productName,
 		l.lotcode as lotCode,
-		seli.quantity as quantity
+		seli.quantity as quantity,
+		gz."name" as municipality,
+		substring(gz2.name,1,length(gz2.name)-12) as province
 	from stockmanagement.stock_events se
 	left join stockmanagement.stock_event_line_items seli on seli.stockeventid = se.id
 	left join referencedata.facilities f on f.id = se.facilityid
 	left join referencedata.programs p on p.id = se.programid
 	left join referencedata.orderables o on o.id = seli.orderableid
 	left join referencedata.lots l on l.id = seli.lotid
+	left join referencedata.geographic_zones gz on gz.id = f.geographiczoneid 
+	left join referencedata.geographic_zones gz2 on gz2.id = gz.parentid  
 	where se.id::varchar = $P{stockEventId}::varchar
 ORDER BY productName]]>
 	</queryString>
@@ -86,6 +90,8 @@ ORDER BY productName]]>
 	<field name="productName" class="java.lang.String"/>
 	<field name="lotCode" class="java.lang.String"/>
 	<field name="quantity" class="java.lang.Integer"/>
+	<field name="municipality" class="java.lang.String"/>
+	<field name="province" class="java.lang.String"/>
 	<group name="Group1" isStartNewPage="true" isReprintHeaderOnEachPage="true" keepTogether="true">
 		<groupHeader>
 			<band height="35" splitType="Stretch">
@@ -497,42 +503,21 @@ ORDER BY productName]]>
 				</textElement>
 				<text><![CDATA[REPÚBLICA DE ANGOLA]]></text>
 			</staticText>
-			<staticText>
-				<reportElement x="0" y="65" width="555" height="15" uuid="73bed568-7884-49a7-a7f2-50d92f241493">
-					<property name="com.jaspersoft.studio.unit.height" value="px"/>
-					<property name="com.jaspersoft.studio.unit.y" value="px"/>
-					<property name="com.jaspersoft.studio.unit.x" value="px"/>
-					<property name="com.jaspersoft.studio.unit.width" value="px"/>
-				</reportElement>
-				<textElement textAlignment="Center" verticalAlignment="Middle">
-					<font isBold="false"/>
-				</textElement>
-				<text><![CDATA[GOVERNO DA PROVÍNCIA DO HUAMBO]]></text>
-			</staticText>
-			<staticText>
-				<reportElement x="0" y="80" width="555" height="15" uuid="ea6e4a8e-6e4d-40f5-96c1-162be28278f7">
-					<property name="com.jaspersoft.studio.unit.height" value="px"/>
-					<property name="com.jaspersoft.studio.unit.y" value="px"/>
-					<property name="com.jaspersoft.studio.unit.x" value="px"/>
-					<property name="com.jaspersoft.studio.unit.width" value="px"/>
-				</reportElement>
-				<textElement textAlignment="Center" verticalAlignment="Middle">
-					<font isBold="false"/>
-				</textElement>
-				<text><![CDATA[GABINETE PROVINCIAL DA SAÚDE]]></text>
-			</staticText>
-			<staticText>
-				<reportElement x="0" y="95" width="555" height="15" uuid="8a2b8e90-72fb-4a99-ac7f-cb5b70448ebf">
-					<property name="com.jaspersoft.studio.unit.height" value="px"/>
-					<property name="com.jaspersoft.studio.unit.y" value="px"/>
-					<property name="com.jaspersoft.studio.unit.x" value="px"/>
-					<property name="com.jaspersoft.studio.unit.width" value="px"/>
-				</reportElement>
-				<textElement textAlignment="Center" verticalAlignment="Middle">
-					<font isBold="false"/>
-				</textElement>
-				<text><![CDATA[DEPARTAMENTO PROVINCIAL DE LOGISTICA HOSPITALAR]]></text>
-			</staticText>
+			<textField>
+				<reportElement x="0" y="95" width="555" height="15" uuid="cf72191d-e6f0-4e99-9b84-ccb5075beaf0"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA["INSTITUIÇÃO "  +(($F{facilityName} == null) ? "" : $F{facilityName})]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="0" y="80" width="555" height="15" uuid="9c9c9a79-2252-43af-9892-775978fda96a"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA["MUNICÍPIO "  +(($F{municipality} == null) ? "" : $F{municipality})]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="0" y="65" width="555" height="15" uuid="dd7535f4-9a4d-474d-a7e2-707fd9b3f0b2"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA["GOVERNO DA PROVÍNCIA "  +(($F{province} == null) ? "" : $F{province})]]></textFieldExpression>
+			</textField>
 		</band>
 	</pageHeader>
 	<detail>
