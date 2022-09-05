@@ -410,7 +410,7 @@ on requisitions.facilityName = facilities.facilityName
 				<textFieldExpression><![CDATA[" de " + $V{PAGE_NUMBER}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="330" y="40" width="140" height="20" uuid="cc820e7b-871c-4b12-b833-b0435778cfef">
+				<reportElement x="390" y="30" width="140" height="20" uuid="cc820e7b-871c-4b12-b833-b0435778cfef">
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 					<property name="com.jaspersoft.studio.unit.x" value="px"/>
 				</reportElement>
