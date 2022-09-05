@@ -179,7 +179,8 @@
 	facilities.facilityName as facilityName,
 	issuesAndReceipts.eventCount as issuesAndReceiptsCount,
 	adjustments.eventCount as adjustmentsCount,
-	inventory.eventCount as inventoryCount
+	inventory.eventCount as inventoryCount,
+	requisitions.eventCount as requisitionsCount
 from
 (select
 		f."name" as facilityName 
@@ -229,12 +230,23 @@ left join (select
 					)
 			group by facilityName) as inventory
 			on inventory.facilityName = facilities.facilityName
+left join (select 
+count(distinct r.id) as eventCount,
+f."name" as facilityName
+from requisition.requisitions r 
+join referencedata.facilities f on f.id = r.facilityid
+where r.createddate::varchar >= $P{startDate}::varchar
+					and r.createddate::varchar <= ($P{endDate}::timestamp + interval '1 day')::varchar
+					and r.status not in ('SKIPPED')
+group by facilityName) as requisitions
+on requisitions.facilityName = facilities.facilityName
 			order by facilityName]]>
 	</queryString>
 	<field name="facilityName" class="java.lang.String"/>
 	<field name="issuesAndReceiptsCount" class="java.lang.Integer"/>
 	<field name="adjustmentsCount" class="java.lang.Integer"/>
 	<field name="inventoryCount" class="java.lang.Integer"/>
+	<field name="requisitionsCount" class="java.lang.Integer"/>
 	<variable name="totalIssuesAndReceiptsCount" class="java.lang.Integer" calculation="Sum">
 		<variableExpression><![CDATA[$F{issuesAndReceiptsCount}]]></variableExpression>
 	</variable>
@@ -244,11 +256,14 @@ left join (select
 	<variable name="totalInventoryCount" class="java.lang.Integer" calculation="Sum">
 		<variableExpression><![CDATA[$F{inventoryCount}]]></variableExpression>
 	</variable>
+	<variable name="totalRequisitionsCount" class="java.lang.Integer" calculation="Sum">
+		<variableExpression><![CDATA[$F{requisitionsCount}]]></variableExpression>
+	</variable>
 	<variable name="totalEventCountInventoryReport" class="java.lang.String"/>
 	<variable name="totalEventCountIssuesAndReceiptsReport" class="java.lang.String"/>
 	<group name="Group1" isStartNewPage="true" isReprintHeaderOnEachPage="true" keepTogether="true">
 		<groupHeader>
-			<band height="32" splitType="Stretch">
+			<band height="40" splitType="Stretch">
 				<property name="com.jaspersoft.studio.unit.height" value="px"/>
 				<textField evaluationTime="Report">
 					<reportElement x="0" y="-8" width="500" height="20" uuid="648287d5-a4e9-4c2c-9cd0-8f4f1f799384">
@@ -272,15 +287,26 @@ left join (select
 					</textElement>
 					<textFieldExpression><![CDATA["Número Total de Entradas e Saídas: " + ($V{totalIssuesAndReceiptsCount} != null ? $V{totalIssuesAndReceiptsCount} : 0)]]></textFieldExpression>
 				</textField>
+				<textField evaluationTime="Report">
+					<reportElement x="0" y="20" width="500" height="20" uuid="b1557394-1499-4def-8c88-ade3bd97f6e4">
+						<property name="com.jaspersoft.studio.unit.y" value="px"/>
+						<property name="com.jaspersoft.studio.unit.x" value="px"/>
+						<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					</reportElement>
+					<textElement>
+						<font size="12"/>
+					</textElement>
+					<textFieldExpression><![CDATA["Número Total de Requisições: " + ($V{totalRequisitionsCount} != null ? $V{totalRequisitionsCount}: 0)]]></textFieldExpression>
+				</textField>
 			</band>
 		</groupHeader>
 	</group>
 	<group name="Group 2" isReprintHeaderOnEachPage="true">
 		<groupHeader>
-			<band height="30" splitType="Stretch">
+			<band height="35" splitType="Stretch">
 				<property name="com.jaspersoft.studio.unit.height" value="px"/>
 				<rectangle>
-					<reportElement x="1" y="0" width="799" height="30" backcolor="#C0C0C0" uuid="5fc73509-f27b-4051-9b0d-0430e9585241">
+					<reportElement x="1" y="5" width="799" height="30" backcolor="#C0C0C0" uuid="5fc73509-f27b-4051-9b0d-0430e9585241">
 						<property name="com.jaspersoft.studio.unit.height" value="px"/>
 					</reportElement>
 					<graphicElement>
@@ -288,21 +314,7 @@ left join (select
 					</graphicElement>
 				</rectangle>
 				<staticText>
-					<reportElement x="1" y="0" width="149" height="30" uuid="2b4f3fdd-a58a-4fd9-98c1-829ac7d36377">
-						<property name="com.jaspersoft.studio.unit.height" value="px"/>
-						<property name="com.jaspersoft.studio.unit.x" value="px"/>
-						<property name="com.jaspersoft.studio.unit.width" value="px"/>
-					</reportElement>
-					<box leftPadding="10">
-						<pen lineColor="#D2D2D2"/>
-					</box>
-					<textElement verticalAlignment="Middle">
-						<font isBold="true"/>
-					</textElement>
-					<text><![CDATA[Instituição]]></text>
-				</staticText>
-				<staticText>
-					<reportElement x="150" y="0" width="180" height="30" uuid="a9c37d49-9c60-4328-baaa-94a02efe13be">
+					<reportElement x="150" y="5" width="130" height="30" uuid="a9c37d49-9c60-4328-baaa-94a02efe13be">
 						<property name="com.jaspersoft.studio.unit.height" value="px"/>
 						<property name="com.jaspersoft.studio.unit.width" value="px"/>
 					</reportElement>
@@ -315,7 +327,7 @@ left join (select
 					<text><![CDATA[Número de Ajustes]]></text>
 				</staticText>
 				<staticText>
-					<reportElement x="330" y="0" width="230" height="30" uuid="8c82f013-4e19-43e8-8784-38b67ca4bcc0">
+					<reportElement x="280" y="5" width="180" height="30" uuid="8c82f013-4e19-43e8-8784-38b67ca4bcc0">
 						<property name="com.jaspersoft.studio.unit.height" value="px"/>
 						<property name="com.jaspersoft.studio.unit.width" value="px"/>
 					</reportElement>
@@ -328,7 +340,7 @@ left join (select
 					<text><![CDATA[Total de Inventários Físicos]]></text>
 				</staticText>
 				<staticText>
-					<reportElement x="560" y="0" width="240" height="30" uuid="907f16fb-d183-49cb-a50d-60103bde998e">
+					<reportElement x="460" y="5" width="190" height="30" uuid="907f16fb-d183-49cb-a50d-60103bde998e">
 						<property name="com.jaspersoft.studio.unit.height" value="px"/>
 						<property name="com.jaspersoft.studio.unit.width" value="px"/>
 					</reportElement>
@@ -338,7 +350,34 @@ left join (select
 					<textElement textAlignment="Left" verticalAlignment="Middle">
 						<font isBold="true"/>
 					</textElement>
-					<text><![CDATA[Número Total de Entradas e Saídas]]></text>
+					<text><![CDATA[Número de Entradas e Saídas]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="650" y="5" width="150" height="30" uuid="66029624-43d2-488d-b134-34a43f5a0634">
+						<property name="com.jaspersoft.studio.unit.height" value="px"/>
+						<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					</reportElement>
+					<box leftPadding="10">
+						<pen lineColor="#D2D2D2"/>
+					</box>
+					<textElement textAlignment="Left" verticalAlignment="Middle">
+						<font isBold="true"/>
+					</textElement>
+					<text><![CDATA[Número de Requisições]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="0" y="5" width="149" height="30" uuid="2b4f3fdd-a58a-4fd9-98c1-829ac7d36377">
+						<property name="com.jaspersoft.studio.unit.height" value="px"/>
+						<property name="com.jaspersoft.studio.unit.x" value="px"/>
+						<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					</reportElement>
+					<box leftPadding="10">
+						<pen lineColor="#D2D2D2"/>
+					</box>
+					<textElement verticalAlignment="Middle">
+						<font isBold="true"/>
+					</textElement>
+					<text><![CDATA[Instituição]]></text>
 				</staticText>
 			</band>
 		</groupHeader>
@@ -371,7 +410,7 @@ left join (select
 				<textFieldExpression><![CDATA[" de " + $V{PAGE_NUMBER}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="330" y="40" width="140" height="20" uuid="cc820e7b-871c-4b12-b833-b0435778cfef">
+				<reportElement x="390" y="30" width="140" height="20" uuid="cc820e7b-871c-4b12-b833-b0435778cfef">
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 					<property name="com.jaspersoft.studio.unit.x" value="px"/>
 				</reportElement>
@@ -406,35 +445,17 @@ PROGRAMA NACIONAL DE MEDICAMENTOS ESSENCIAIS]]></text>
 		</band>
 	</pageHeader>
 	<detail>
-		<band height="30">
+		<band height="35">
 			<property name="com.jaspersoft.studio.unit.height" value="px"/>
-			<printWhenExpression><![CDATA[$F{adjustmentsCount} != null  || $F{issuesAndReceiptsCount} != null || $F{inventoryCount} != null]]></printWhenExpression>
+			<printWhenExpression><![CDATA[$F{adjustmentsCount} != null  || $F{issuesAndReceiptsCount} != null || $F{inventoryCount} != null || $F{requisitionsCount} != null]]></printWhenExpression>
 			<rectangle>
-				<reportElement stretchType="ElementGroupHeight" x="0" y="0" width="800" height="30" printWhenGroupChanges="Group1" backcolor="#F0F0F0" uuid="63561d35-41c4-45ad-a8df-c02ffdb77bd5"/>
+				<reportElement stretchType="ElementGroupHeight" x="0" y="0" width="800" height="35" printWhenGroupChanges="Group1" backcolor="#F0F0F0" uuid="63561d35-41c4-45ad-a8df-c02ffdb77bd5"/>
 				<graphicElement>
 					<pen lineWidth="0.0"/>
 				</graphicElement>
 			</rectangle>
-			<textField isStretchWithOverflow="true" isBlankWhenNull="false">
-				<reportElement positionType="Float" x="0" y="0" width="150" height="30" printWhenGroupChanges="Group1" uuid="a45ca3ee-a214-492d-8c77-0086d42ca278">
-					<property name="com.jaspersoft.studio.unit.y" value="px"/>
-					<property name="com.jaspersoft.studio.unit.x" value="px"/>
-					<property name="com.jaspersoft.studio.unit.width" value="px"/>
-				</reportElement>
-				<box leftPadding="10">
-					<pen lineColor="#D2D2D2"/>
-					<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#D2D2D2"/>
-					<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#D2D2D2"/>
-					<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#D2D2D2"/>
-					<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#D2D2D2"/>
-				</box>
-				<textElement verticalAlignment="Middle">
-					<font isBold="true"/>
-				</textElement>
-				<textFieldExpression><![CDATA[$F{facilityName}]]></textFieldExpression>
-			</textField>
 			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-				<reportElement x="150" y="0" width="180" height="30" printWhenGroupChanges="Group1" uuid="5e163681-fb1e-4888-b7ee-716571c7a963">
+				<reportElement x="150" y="0" width="130" height="35" printWhenGroupChanges="Group1" uuid="5e163681-fb1e-4888-b7ee-716571c7a963">
 					<property name="com.jaspersoft.studio.unit.y" value="px"/>
 					<property name="com.jaspersoft.studio.unit.x" value="px"/>
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
@@ -452,7 +473,7 @@ PROGRAMA NACIONAL DE MEDICAMENTOS ESSENCIAIS]]></text>
 				<textFieldExpression><![CDATA[$F{adjustmentsCount} != null ? $F{adjustmentsCount}  : 0]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-				<reportElement x="330" y="0" width="230" height="30" printWhenGroupChanges="Group1" uuid="3fea9076-2b3c-4f46-a5fe-5d2a60a63e8b">
+				<reportElement x="280" y="0" width="180" height="35" printWhenGroupChanges="Group1" uuid="3fea9076-2b3c-4f46-a5fe-5d2a60a63e8b">
 					<property name="com.jaspersoft.studio.unit.y" value="px"/>
 					<property name="com.jaspersoft.studio.unit.x" value="px"/>
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
@@ -470,7 +491,7 @@ PROGRAMA NACIONAL DE MEDICAMENTOS ESSENCIAIS]]></text>
 				<textFieldExpression><![CDATA[$F{inventoryCount} != null ? $F{inventoryCount} : 0]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-				<reportElement x="560" y="0" width="240" height="30" printWhenGroupChanges="Group1" uuid="465a4fdd-33fb-464b-b0ae-70a985d0e952">
+				<reportElement x="460" y="0" width="190" height="35" printWhenGroupChanges="Group1" uuid="465a4fdd-33fb-464b-b0ae-70a985d0e952">
 					<property name="com.jaspersoft.studio.unit.y" value="px"/>
 					<property name="com.jaspersoft.studio.unit.x" value="px"/>
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
@@ -486,6 +507,42 @@ PROGRAMA NACIONAL DE MEDICAMENTOS ESSENCIAIS]]></text>
 					<font isBold="true"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{issuesAndReceiptsCount} != null ? $F{issuesAndReceiptsCount} : 0]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement x="650" y="0" width="150" height="35" printWhenGroupChanges="Group1" uuid="c14fc8da-c401-4563-863f-01cfe9884ba9">
+					<property name="com.jaspersoft.studio.unit.y" value="px"/>
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				</reportElement>
+				<box leftPadding="10">
+					<pen lineColor="#D2D2D2"/>
+					<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#D2D2D2"/>
+					<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#D2D2D2"/>
+					<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#D2D2D2"/>
+					<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#D2D2D2"/>
+				</box>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{requisitionsCount}!= null ? $F{requisitionsCount}  : 0]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="false">
+				<reportElement positionType="Float" x="0" y="0" width="150" height="35" printWhenGroupChanges="Group1" uuid="a45ca3ee-a214-492d-8c77-0086d42ca278">
+					<property name="com.jaspersoft.studio.unit.y" value="px"/>
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				</reportElement>
+				<box leftPadding="10">
+					<pen lineColor="#D2D2D2"/>
+					<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#D2D2D2"/>
+					<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#D2D2D2"/>
+					<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#D2D2D2"/>
+					<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#D2D2D2"/>
+				</box>
+				<textElement verticalAlignment="Middle">
+					<font isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{facilityName}]]></textFieldExpression>
 			</textField>
 		</band>
 	</detail>
