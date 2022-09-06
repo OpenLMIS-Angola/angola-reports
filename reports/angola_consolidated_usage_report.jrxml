@@ -314,7 +314,6 @@ on requisitions.facilityName = facilities.facilityName
 					</graphicElement>
 				</rectangle>
 				<staticText>
-					<reportElement x="1" y="0" width="259" height="30" uuid="2b4f3fdd-a58a-4fd9-98c1-829ac7d36377">
 					<reportElement x="150" y="5" width="130" height="30" uuid="a9c37d49-9c60-4328-baaa-94a02efe13be">
 						<property name="com.jaspersoft.studio.unit.height" value="px"/>
 						<property name="com.jaspersoft.studio.unit.width" value="px"/>
@@ -328,7 +327,7 @@ on requisitions.facilityName = facilities.facilityName
 					<text><![CDATA[Número de Ajustes]]></text>
 				</staticText>
 				<staticText>
-					<reportElement x="260" y="0" width="130" height="30" uuid="a9c37d49-9c60-4328-baaa-94a02efe13be">
+					<reportElement x="280" y="5" width="180" height="30" uuid="8c82f013-4e19-43e8-8784-38b67ca4bcc0">
 						<property name="com.jaspersoft.studio.unit.height" value="px"/>
 						<property name="com.jaspersoft.studio.unit.width" value="px"/>
 					</reportElement>
@@ -341,7 +340,7 @@ on requisitions.facilityName = facilities.facilityName
 					<text><![CDATA[Total de Inventários Físicos]]></text>
 				</staticText>
 				<staticText>
-					<reportElement x="390" y="0" width="180" height="30" uuid="8c82f013-4e19-43e8-8784-38b67ca4bcc0">
+					<reportElement x="460" y="5" width="190" height="30" uuid="907f16fb-d183-49cb-a50d-60103bde998e">
 						<property name="com.jaspersoft.studio.unit.height" value="px"/>
 						<property name="com.jaspersoft.studio.unit.width" value="px"/>
 					</reportElement>
@@ -354,7 +353,7 @@ on requisitions.facilityName = facilities.facilityName
 					<text><![CDATA[Número de Entradas e Saídas]]></text>
 				</staticText>
 				<staticText>
-					<reportElement x="570" y="0" width="230" height="30" uuid="907f16fb-d183-49cb-a50d-60103bde998e">
+					<reportElement x="650" y="5" width="150" height="30" uuid="66029624-43d2-488d-b134-34a43f5a0634">
 						<property name="com.jaspersoft.studio.unit.height" value="px"/>
 						<property name="com.jaspersoft.studio.unit.width" value="px"/>
 					</reportElement>
@@ -455,8 +454,8 @@ PROGRAMA NACIONAL DE MEDICAMENTOS ESSENCIAIS]]></text>
 					<pen lineWidth="0.0"/>
 				</graphicElement>
 			</rectangle>
-			<textField isStretchWithOverflow="true" isBlankWhenNull="false">
-				<reportElement positionType="Float" x="0" y="0" width="260" height="30" printWhenGroupChanges="Group1" uuid="a45ca3ee-a214-492d-8c77-0086d42ca278">
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement x="150" y="0" width="130" height="35" printWhenGroupChanges="Group1" uuid="5e163681-fb1e-4888-b7ee-716571c7a963">
 					<property name="com.jaspersoft.studio.unit.y" value="px"/>
 					<property name="com.jaspersoft.studio.unit.x" value="px"/>
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
@@ -474,7 +473,7 @@ PROGRAMA NACIONAL DE MEDICAMENTOS ESSENCIAIS]]></text>
 				<textFieldExpression><![CDATA[$F{adjustmentsCount} != null ? $F{adjustmentsCount}  : 0]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-				<reportElement x="260" y="0" width="130" height="30" printWhenGroupChanges="Group1" uuid="5e163681-fb1e-4888-b7ee-716571c7a963">
+				<reportElement x="280" y="0" width="180" height="35" printWhenGroupChanges="Group1" uuid="3fea9076-2b3c-4f46-a5fe-5d2a60a63e8b">
 					<property name="com.jaspersoft.studio.unit.y" value="px"/>
 					<property name="com.jaspersoft.studio.unit.x" value="px"/>
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
@@ -492,7 +491,7 @@ PROGRAMA NACIONAL DE MEDICAMENTOS ESSENCIAIS]]></text>
 				<textFieldExpression><![CDATA[$F{inventoryCount} != null ? $F{inventoryCount} : 0]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-				<reportElement x="390" y="0" width="180" height="30" printWhenGroupChanges="Group1" uuid="3fea9076-2b3c-4f46-a5fe-5d2a60a63e8b">
+				<reportElement x="460" y="0" width="190" height="35" printWhenGroupChanges="Group1" uuid="465a4fdd-33fb-464b-b0ae-70a985d0e952">
 					<property name="com.jaspersoft.studio.unit.y" value="px"/>
 					<property name="com.jaspersoft.studio.unit.x" value="px"/>
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
@@ -510,7 +509,7 @@ PROGRAMA NACIONAL DE MEDICAMENTOS ESSENCIAIS]]></text>
 				<textFieldExpression><![CDATA[$F{issuesAndReceiptsCount} != null ? $F{issuesAndReceiptsCount} : 0]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-				<reportElement x="570" y="0" width="230" height="30" printWhenGroupChanges="Group1" uuid="465a4fdd-33fb-464b-b0ae-70a985d0e952">
+				<reportElement x="650" y="0" width="150" height="35" printWhenGroupChanges="Group1" uuid="c14fc8da-c401-4563-863f-01cfe9884ba9">
 					<property name="com.jaspersoft.studio.unit.y" value="px"/>
 					<property name="com.jaspersoft.studio.unit.x" value="px"/>
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
