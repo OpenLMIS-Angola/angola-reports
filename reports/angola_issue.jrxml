@@ -525,17 +525,17 @@ ORDER BY productName]]>
 			<textField>
 				<reportElement x="0" y="95" width="555" height="15" uuid="cf72191d-e6f0-4e99-9b84-ccb5075beaf0"/>
 				<textElement textAlignment="Center" verticalAlignment="Middle"/>
-				<textFieldExpression><![CDATA[UPPER(($F{facilityName} == null) ? "" : $F{facilityName})]]></textFieldExpression>
+				<textFieldExpression><![CDATA[(($F{facilityName} == null) ? "" : $F{facilityName}).toUpperCase()]]></textFieldExpression>
 			</textField>
 			<textField>
 				<reportElement x="0" y="80" width="555" height="15" uuid="9c9c9a79-2252-43af-9892-775978fda96a"/>
 				<textElement textAlignment="Center" verticalAlignment="Middle"/>
-				<textFieldExpression><![CDATA["MUNICÍPIO "  +UPPER(($F{municipality} == null) ? "" : $F{municipality})]]></textFieldExpression>
+				<textFieldExpression><![CDATA["MUNICÍPIO "  +(($F{municipality} == null) ? "" : $F{municipality}).toUpperCase()]]></textFieldExpression>
 			</textField>
 			<textField>
 				<reportElement x="0" y="65" width="555" height="15" uuid="dd7535f4-9a4d-474d-a7e2-707fd9b3f0b2"/>
 				<textElement textAlignment="Center" verticalAlignment="Middle"/>
-				<textFieldExpression><![CDATA["GOVERNO DA PROVÍNCIA "  +UPPER(($F{province} == null) ? "" : $F{province})]]></textFieldExpression>
+				<textFieldExpression><![CDATA["GOVERNO DA PROVÍNCIA "  +(($F{province} == null) ? "" : $F{province}).toUpperCase()]]></textFieldExpression>
 			</textField>
 		</band>
 	</pageHeader>
@@ -629,7 +629,7 @@ ORDER BY productName]]>
 			<textField>
 				<reportElement x="0" y="5" width="555" height="15" uuid="d345d525-79fc-4298-a6fe-11a5decd6828"/>
 				<textElement textAlignment="Center" verticalAlignment="Middle"/>
-				<textFieldExpression><![CDATA[UPPER(($F{province} == null) ? "" : $F{province} + ", ")  + "AOS "
+				<textFieldExpression><![CDATA[(($F{province} == null) ? "" : $F{province} + ", ").toUpperCase()  + "AOS "
 +
 java.time.format.DateTimeFormatter.ofPattern("dd-MM-yyyy").format(java.time.LocalDateTime.now());]]></textFieldExpression>
 			</textField>
