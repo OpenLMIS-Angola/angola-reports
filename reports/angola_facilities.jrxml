@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- Created with Jaspersoft Studio version 6.20.0.final using JasperReports Library version 6.20.0-2bc7ab61c56f459e8176eb05c7705e145cd400ad  -->
+<!-- Created with Jaspersoft Studio version 6.6.0.final using JasperReports Library version 6.6.0  -->
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="daily_balance" pageWidth="595" pageHeight="842" whenNoDataType="AllSectionsNoDetail" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" whenResourceMissingType="Error" uuid="548a4d5f-1cb0-4fa0-b5f9-40a07c579f42">
 	<property name="com.jaspersoft.studio.data.sql.SQLQueryDesigner.sash.w1" value="0"/>
 	<property name="com.jaspersoft.studio.data.sql.SQLQueryDesigner.sash.w2" value="1000"/>
-	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="Angola UAT "/>
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="Angola"/>
 	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
 	<property name="net.sf.jasperreports.export.html.embed.image" value="true"/>
 	<property name="net.sf.jasperreports.print.keep.full.text" value="true"/>
@@ -208,7 +208,7 @@ ORDER BY f.name, f.code, gz."name", ft."name"]]>
 					<pen lineWidth="0.0"/>
 				</graphicElement>
 			</rectangle>
-			<textField textAdjust="StretchHeight" isBlankWhenNull="false">
+			<textField>
 				<reportElement x="260" y="0" width="120" height="30" uuid="d3701db3-81a1-4e56-8766-2d0196e1d5fe">
 					<printWhenExpression><![CDATA[$F{geographic_zone} != null]]></printWhenExpression>
 				</reportElement>
@@ -227,7 +227,7 @@ ORDER BY f.name, f.code, gz."name", ft."name"]]>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{type}]]></textFieldExpression>
 			</textField>
-			<textField textAdjust="StretchHeight" isBlankWhenNull="false">
+			<textField>
 				<reportElement x="200" y="0" width="60" height="30" uuid="3db4143d-16d7-400f-b395-8db50097fc6b">
 					<property name="com.jaspersoft.studio.unit.y" value="px"/>
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
@@ -239,7 +239,7 @@ ORDER BY f.name, f.code, gz."name", ft."name"]]>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{facility_code}]]></textFieldExpression>
 			</textField>
-			<textField textAdjust="StretchHeight" isBlankWhenNull="false">
+			<textField>
 				<reportElement x="5" y="0" width="194" height="30" uuid="bb37884a-15e8-493a-8af1-f6567284504b">
 					<property name="com.jaspersoft.studio.unit.y" value="px"/>
 					<property name="com.jaspersoft.studio.unit.x" value="px"/>
