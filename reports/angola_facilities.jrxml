@@ -58,8 +58,8 @@
 		<property name="required" value="false"/>
 		<defaultValueExpression><![CDATA[""]]></defaultValueExpression>
 	</parameter>
-	<parameter name="geographic_zone" class="java.lang.String">
-		<property name="displayProperty" value="Geographic Zone"/>
+	<parameter name="geographic_zone_id" class="java.lang.String">
+		<property name="displayProperty" value="Geographic Zone Id"/>
 		<property name="required" value="false"/>
 		<defaultValueExpression><![CDATA[""]]></defaultValueExpression>
 	</parameter>
@@ -76,9 +76,9 @@ ON
 INNER JOIN referencedata.facility_types ft 
 ON ft.id = f.typeid
 WHERE 
-  f.name ILIKE '%$P!{facility_name}%'
+  f.name ILIKE CONCAT('%',$P{facility_name}::varchar,'%')
 AND 
-  gz."name" ILIKE '%$P!{geographic_zone}%'
+  f.geographiczoneid::varchar ILIKE CONCAT('%',$P{geographic_zone_id}::varchar,'%')
 ORDER BY f.name, f.code, gz."name", ft."name"]]>
 	</queryString>
 	<field name="facility_name" class="java.lang.String"/>
