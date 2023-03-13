@@ -98,9 +98,9 @@ from
   product_orderables
 where 
   productVersionRank = 1
-  and code ILIKE '%$P!{code}%'
-  AND name ILIKE '%$P!{name}%'
-  AND program_code ILIKE '%$P!{program_code}%'
+  and code ILIKE CONCAT('%',$P{code}::varchar,'%')
+  AND name ILIKE CONCAT('%',$P{name}::varchar,'%')
+  AND program_code ILIKE CONCAT('%',$P{program_code}::varchar,'%')
 ORDER BY 
   code,
   name,
