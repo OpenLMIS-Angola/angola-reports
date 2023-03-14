@@ -1,0 +1,66 @@
+INSERT INTO template_parameters (id, datatype, defaultvalue, description, displayname, name, displayproperty, required, selectexpression,selectproperty, templateid, selectmethod, selectbody) VALUES
+(
+    '4f64f834-9ad1-403e-9950-b1fda41f4d4c',
+    'java.lang.String', null, null,
+    'facility_name',
+    'facility_name',
+    'facility_name',
+    false,
+    null,
+    null,
+    '4053ba54-02ad-4848-887a-67e769844088',
+    'GET',
+    null
+),
+(
+    '3cd77082-2403-439a-8d6a-ec5199f6dc3e',
+    'java.lang.String', null, null,
+    'geographic_zone_id',
+    'geographic_zone_id',
+    'geographic_zone_id',
+    false,
+    null,
+    null,
+    '4053ba54-02ad-4848-887a-67e769844088',
+    'GET',
+    null
+),
+(
+    'e403e750-4ca8-4fe9-a43a-3b4d8cc0280b',
+    'java.lang.String', null, null,
+    'code',
+    'code',
+    'code',
+    false,
+    null,
+    null,
+    '571ee24d-df1b-4d57-ab5d-b88025116524',
+    'GET',
+    null
+),
+(
+    '989c2819-5cd4-4487-bb62-63e8bc829aac',
+    'java.lang.String', null, null,
+    'name',
+    'name',
+    'name',
+    false,
+    null,
+    null,
+    '571ee24d-df1b-4d57-ab5d-b88025116524',
+    'GET',
+    null
+),
+(
+    'e37c1c3e-64b7-4fa7-981c-967c98964427',
+    'java.lang.String', null, null,
+    'program_code',
+    'program_code',
+    'program_code',
+    false,
+    null,
+    null,
+    '571ee24d-df1b-4d57-ab5d-b88025116524',
+    'GET',
+    null
+);
