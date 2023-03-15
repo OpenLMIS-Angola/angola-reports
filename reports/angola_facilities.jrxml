@@ -107,7 +107,7 @@ ORDER BY f.name, f.code, gz."name", ft."name"]]>
 					</graphicElement>
 				</rectangle>
 				<staticText>
-					<reportElement x="5" y="0" width="194" height="24" uuid="2b4f3fdd-a58a-4fd9-98c1-829ac7d36377">
+					<reportElement x="5" y="0" width="215" height="24" uuid="2b4f3fdd-a58a-4fd9-98c1-829ac7d36377">
 						<property name="com.jaspersoft.studio.unit.height" value="px"/>
 						<property name="com.jaspersoft.studio.unit.x" value="px"/>
 						<property name="com.jaspersoft.studio.unit.width" value="px"/>
@@ -118,7 +118,7 @@ ORDER BY f.name, f.code, gz."name", ft."name"]]>
 					<text><![CDATA[Nome das instalações]]></text>
 				</staticText>
 				<staticText>
-					<reportElement x="200" y="0" width="60" height="24" uuid="a9c37d49-9c60-4328-baaa-94a02efe13be">
+					<reportElement x="220" y="1" width="60" height="24" uuid="a9c37d49-9c60-4328-baaa-94a02efe13be">
 						<property name="com.jaspersoft.studio.unit.height" value="px"/>
 					</reportElement>
 					<textElement verticalAlignment="Middle">
@@ -127,7 +127,7 @@ ORDER BY f.name, f.code, gz."name", ft."name"]]>
 					<text><![CDATA[Código]]></text>
 				</staticText>
 				<staticText>
-					<reportElement x="260" y="0" width="120" height="24" uuid="c53b02e5-aaab-4886-902a-c3546f911543">
+					<reportElement x="280" y="0" width="100" height="24" uuid="c53b02e5-aaab-4886-902a-c3546f911543">
 						<property name="com.jaspersoft.studio.unit.height" value="px"/>
 					</reportElement>
 					<textElement verticalAlignment="Middle">
@@ -152,7 +152,7 @@ ORDER BY f.name, f.code, gz."name", ft."name"]]>
 						<property name="com.jaspersoft.studio.unit.x" value="px"/>
 						<property name="com.jaspersoft.studio.unit.width" value="px"/>
 					</reportElement>
-					<textElement verticalAlignment="Middle">
+					<textElement textAlignment="Left" verticalAlignment="Middle">
 						<font isBold="true"/>
 					</textElement>
 					<text><![CDATA[Activo]]></text>
@@ -163,7 +163,7 @@ ORDER BY f.name, f.code, gz."name", ft."name"]]>
 						<property name="com.jaspersoft.studio.unit.x" value="px"/>
 						<property name="com.jaspersoft.studio.unit.width" value="px"/>
 					</reportElement>
-					<textElement verticalAlignment="Middle">
+					<textElement textAlignment="Left" verticalAlignment="Middle">
 						<font isBold="true"/>
 					</textElement>
 					<text><![CDATA[ Activado]]></text>
@@ -209,7 +209,7 @@ ORDER BY f.name, f.code, gz."name", ft."name"]]>
 				</graphicElement>
 			</rectangle>
 			<textField>
-				<reportElement x="260" y="0" width="120" height="30" uuid="d3701db3-81a1-4e56-8766-2d0196e1d5fe">
+				<reportElement x="280" y="0" width="100" height="30" uuid="d3701db3-81a1-4e56-8766-2d0196e1d5fe">
 					<printWhenExpression><![CDATA[$F{geographic_zone} != null]]></printWhenExpression>
 				</reportElement>
 				<textElement textAlignment="Left" verticalAlignment="Middle">
@@ -228,7 +228,7 @@ ORDER BY f.name, f.code, gz."name", ft."name"]]>
 				<textFieldExpression><![CDATA[$F{type}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="200" y="0" width="60" height="30" uuid="3db4143d-16d7-400f-b395-8db50097fc6b">
+				<reportElement x="220" y="0" width="60" height="30" uuid="3db4143d-16d7-400f-b395-8db50097fc6b">
 					<property name="com.jaspersoft.studio.unit.y" value="px"/>
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 					<property name="com.jaspersoft.studio.unit.x" value="px"/>
@@ -240,7 +240,7 @@ ORDER BY f.name, f.code, gz."name", ft."name"]]>
 				<textFieldExpression><![CDATA[$F{facility_code}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="5" y="0" width="194" height="30" uuid="bb37884a-15e8-493a-8af1-f6567284504b">
+				<reportElement x="5" y="0" width="215" height="30" uuid="bb37884a-15e8-493a-8af1-f6567284504b">
 					<property name="com.jaspersoft.studio.unit.y" value="px"/>
 					<property name="com.jaspersoft.studio.unit.x" value="px"/>
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
@@ -256,20 +256,20 @@ ORDER BY f.name, f.code, gz."name", ft."name"]]>
 					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
 					<printWhenExpression><![CDATA[$F{active} != null]]></printWhenExpression>
 				</reportElement>
-				<textElement textAlignment="Center" verticalAlignment="Middle">
+				<textElement textAlignment="Left" verticalAlignment="Middle">
 					<font size="12" isBold="false"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{active} ? "True":"False"]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{active} ? "Sim":"Não"]]></textFieldExpression>
 			</textField>
 			<textField isBlankWhenNull="false">
 				<reportElement x="500" y="0" width="54" height="30" uuid="c77691b9-433f-4d33-9f7d-7796b5f36577">
 					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
 					<printWhenExpression><![CDATA[$F{enabled} != null]]></printWhenExpression>
 				</reportElement>
-				<textElement textAlignment="Center" verticalAlignment="Middle">
+				<textElement textAlignment="Left" verticalAlignment="Middle">
 					<font size="12" isBold="false"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{enabled} ? "True":"False"]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{enabled} ? "Sim":"Não"]]></textFieldExpression>
 			</textField>
 		</band>
 	</detail>
