@@ -82,7 +82,6 @@
 	left join (
     select
         id,
-        code as productCode,
         fullproductname as productName,
         RANK () OVER (
             PARTITION BY id
