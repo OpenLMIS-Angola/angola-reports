@@ -3,7 +3,7 @@
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="issue" pageWidth="595" pageHeight="842" orientation="Landscape" whenNoDataType="AllSectionsNoDetail" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" whenResourceMissingType="Error" uuid="548a4d5f-1cb0-4fa0-b5f9-40a07c579f42">
 	<property name="com.jaspersoft.studio.data.sql.SQLQueryDesigner.sash.w1" value="0"/>
 	<property name="com.jaspersoft.studio.data.sql.SQLQueryDesigner.sash.w2" value="1000"/>
-	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="Angola_dev"/>
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="Angola"/>
 	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
 	<property name="net.sf.jasperreports.export.html.embed.image" value="true"/>
 	<property name="net.sf.jasperreports.print.keep.full.text" value="true"/>
@@ -69,7 +69,7 @@
 		<![CDATA[select distinct
 		f."name" as facilityName,
 		p."name" as programName,
-		o.fullproductname as productName,
+		o.productName as productName,
 		l.lotcode as lotCode,
 		seli.occurreddate as transferDate,
 		seli.quantity as quantity,
@@ -79,11 +79,21 @@
 	left join stockmanagement.stock_event_line_items seli on seli.stockeventid = se.id
 	left join referencedata.facilities f on f.id = se.facilityid
 	left join referencedata.programs p on p.id = se.programid
-	left join referencedata.orderables o on o.id = seli.orderableid
+	left join (
+    select
+        id,
+        fullproductname as productName,
+        RANK () OVER (
+            PARTITION BY id
+            ORDER BY versionnumber DESC
+        ) AS productVersionRank
+    from referencedata.orderables
+) as o on o.id = seli.orderableid
 	left join referencedata.lots l on l.id = seli.lotid
 	left join referencedata.geographic_zones gz on gz.id = f.geographiczoneid
 	left join referencedata.geographic_zones gz2 on gz2.id = gz.parentid
 	where se.id::varchar = $P{stockEventId}::varchar
+	and productVersionRank = 1
 ORDER BY productName]]>
 	</queryString>
 	<field name="facilityName" class="java.lang.String"/>
