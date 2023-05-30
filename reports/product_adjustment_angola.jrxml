@@ -152,7 +152,7 @@ ORDER BY facility, adjustmentDate DESC]]>
 		<band height="2" splitType="Stretch"/>
 	</title>
 	<pageHeader>
-		<band height="150" splitType="Stretch">
+		<band height="160" splitType="Stretch">
 			<image>
 				<reportElement x="0" y="3" width="50" height="50" uuid="5f630588-4582-4ff0-bbd4-a7ba6476a9c9"/>
 				<imageExpression><![CDATA[getClass().getResourceAsStream($P{imagesDirectory} + "malawi_crest.png")]]></imageExpression>
@@ -386,7 +386,7 @@ ORDER BY facility, adjustmentDate DESC]]>
 			<rectangle>
 				<reportElement stretchType="RelativeToBandHeight" x="0" y="0" width="801" height="40" backcolor="#F0F0F0" uuid="2de367b0-e3ff-42e2-b474-e9accdcd1c69"/>
 				<graphicElement>
-					<pen lineWidth="0.0"/>
+					<pen lineWidth="0.0" lineColor="#D2D2D2"/>
 				</graphicElement>
 			</rectangle>
 			<textField isBlankWhenNull="true">
@@ -466,8 +466,21 @@ ORDER BY facility, adjustmentDate DESC]]>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{adjustmentType}]]></textFieldExpression>
 			</textField>
-			<textField isBlankWhenNull="true">
-				<reportElement stretchType="ContainerHeight" isPrintRepeatedValues="false" x="652" y="0" width="77" height="40" isPrintInFirstWholeBand="true" uuid="c4987105-3a8d-4cc6-9ca1-f882d2c08d0d"/>
+			<textField isBlankWhenNull="false">
+				<reportElement stretchType="ContainerHeight" x="730" y="0" width="72" height="40" isPrintInFirstWholeBand="true" uuid="51580919-60e0-45f5-9508-afa0bd3df184">
+					<printWhenExpression><![CDATA[true]]></printWhenExpression>
+				</reportElement>
+				<box padding="2">
+					<pen lineWidth="0.25" lineColor="#D2D2D2"/>
+				</box>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font isBold="false"/>
+					<paragraph lineSpacing="1_1_2"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{signature} != null ? $F{signature} : "   "]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="false">
+				<reportElement stretchType="ContainerHeight" x="652" y="0" width="77" height="40" isPrintInFirstWholeBand="true" uuid="c4987105-3a8d-4cc6-9ca1-f882d2c08d0d"/>
 				<box padding="2">
 					<pen lineWidth="0.25" lineColor="#D2D2D2"/>
 					<topPen lineWidth="0.25" lineStyle="Solid" lineColor="#D2D2D2"/>
@@ -477,24 +490,8 @@ ORDER BY facility, adjustmentDate DESC]]>
 				</box>
 				<textElement textAlignment="Left" verticalAlignment="Middle">
 					<font isBold="false"/>
-					<paragraph lineSpacing="1_1_2"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{user}]]></textFieldExpression>
-			</textField>
-			<textField isBlankWhenNull="true">
-				<reportElement stretchType="ContainerHeight" isPrintRepeatedValues="false" x="729" y="0" width="72" height="40" isPrintInFirstWholeBand="true" uuid="51580919-60e0-45f5-9508-afa0bd3df184"/>
-				<box padding="2">
-					<pen lineWidth="0.25" lineColor="#D2D2D2"/>
-					<topPen lineWidth="0.25" lineStyle="Solid" lineColor="#D2D2D2"/>
-					<leftPen lineWidth="0.25" lineStyle="Solid" lineColor="#D2D2D2"/>
-					<bottomPen lineWidth="0.25" lineStyle="Solid" lineColor="#D2D2D2"/>
-					<rightPen lineWidth="0.25" lineStyle="Solid" lineColor="#D2D2D2"/>
-				</box>
-				<textElement textAlignment="Left" verticalAlignment="Middle">
-					<font isBold="false"/>
-					<paragraph lineSpacing="1_1_2"/>
-				</textElement>
-				<textFieldExpression><![CDATA[$F{signature}]]></textFieldExpression>
 			</textField>
 		</band>
 	</detail>
