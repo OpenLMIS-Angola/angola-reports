@@ -365,7 +365,7 @@ ORDER BY facility, adjustmentDate DESC]]>
 				<text><![CDATA[Do utilizador]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="729" y="0" width="71" height="30" uuid="75f2e958-c06c-4aaa-a617-8f1af04ec7f1"/>
+				<reportElement x="729" y="0" width="72" height="30" uuid="75f2e958-c06c-4aaa-a617-8f1af04ec7f1"/>
 				<box leftPadding="2" bottomPadding="1">
 					<pen lineWidth="1.0" lineColor="#80C7E8"/>
 					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
@@ -467,7 +467,7 @@ ORDER BY facility, adjustmentDate DESC]]>
 				<textFieldExpression><![CDATA[$F{adjustmentType}]]></textFieldExpression>
 			</textField>
 			<textField isBlankWhenNull="false">
-				<reportElement stretchType="ContainerHeight" x="730" y="0" width="72" height="40" isPrintInFirstWholeBand="true" uuid="51580919-60e0-45f5-9508-afa0bd3df184">
+				<reportElement stretchType="ContainerHeight" x="729" y="0" width="72" height="40" isPrintInFirstWholeBand="true" uuid="51580919-60e0-45f5-9508-afa0bd3df184">
 					<printWhenExpression><![CDATA[true]]></printWhenExpression>
 				</reportElement>
 				<box padding="2">
