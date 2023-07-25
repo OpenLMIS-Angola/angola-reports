@@ -460,7 +460,7 @@ ORDER BY facilityNameReceiver]]>
 				</reportElement>
 				<box leftPadding="2"/>
 				<textElement textAlignment="Left" verticalAlignment="Middle"/>
-				<textFieldExpression><![CDATA[java.time.format.DateTimeFormatter.ofPattern("dd-MM-yyyy, hh:mm a").format(java.time.LocalDateTime.now());]]></textFieldExpression>
+				<textFieldExpression><![CDATA[java.time.format.DateTimeFormatter.ofPattern("dd-MM-yyyy, hh:mm a").format(java.time.ZonedDateTime.now(java.time.ZoneId.of("Africa/Luanda")));]]></textFieldExpression>
 			</textField>
 			<textField isBlankWhenNull="false">
 				<reportElement key="" x="60" y="0" width="175" height="30" isRemoveLineWhenBlank="true" isPrintInFirstWholeBand="true" uuid="ef0b0cb1-79c4-4f50-96c2-374e38663441">
