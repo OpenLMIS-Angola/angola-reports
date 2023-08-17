@@ -422,17 +422,11 @@ ORDER BY facilityNameReceiver]]>
 				<textElement textAlignment="Center" verticalAlignment="Middle"/>
 				<textFieldExpression><![CDATA[($F{facilityName}.contains("CECOMA")) ?  "" :  "GOVERNO DA PROVÍNCIA "  +(($F{province} == null) ? "" : $F{province}).toUpperCase()]]></textFieldExpression>
 			</textField>
-			<staticText>
-				<reportElement x="0" y="65" width="555" height="15" uuid="b99d72ae-4bbd-4e88-bb0e-ae1ef1799184">
-					<property name="com.jaspersoft.studio.unit.y" value="px"/>
-					<property name="com.jaspersoft.studio.unit.height" value="px"/>
-					<property name="com.jaspersoft.studio.unit.width" value="px"/>
-				</reportElement>
-				<textElement textAlignment="Center" verticalAlignment="Middle">
-					<font isBold="false"/>
-				</textElement>
-				<text><![CDATA[Ministério Da Saúde]]></text>
-			</staticText>
+			<textField>
+				<reportElement x="1" y="63" width="554" height="15" isRemoveLineWhenBlank="true" uuid="393cbdbc-b665-4479-ae78-63dde3eb1c90"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$F{facilityName}.contains("CECOMA") ?  "MINISTÉRIO DA SAÚDE" : ""]]></textFieldExpression>
+			</textField>
 		</band>
 	</pageHeader>
 	<detail>
