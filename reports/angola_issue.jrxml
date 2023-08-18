@@ -388,7 +388,7 @@ ORDER BY facilityNameReceiver]]>
 		<band splitType="Stretch"/>
 	</background>
 	<pageHeader>
-		<band height="140" splitType="Stretch">
+		<band height="123" splitType="Stretch">
 			<property name="com.jaspersoft.studio.unit.height" value="px"/>
 			<image>
 				<reportElement x="252" y="0" width="50" height="50" uuid="e916dce2-a090-4a92-83ae-9c46792bcf61">
@@ -408,24 +408,19 @@ ORDER BY facilityNameReceiver]]>
 				<text><![CDATA[REPÚBLICA DE ANGOLA]]></text>
 			</staticText>
 			<textField>
-				<reportElement x="0" y="110" width="555" height="15" isRemoveLineWhenBlank="true" uuid="cf72191d-e6f0-4e99-9b84-ccb5075beaf0"/>
+				<reportElement x="0" y="95" width="555" height="15" isRemoveLineWhenBlank="true" uuid="cf72191d-e6f0-4e99-9b84-ccb5075beaf0"/>
 				<textElement textAlignment="Center" verticalAlignment="Middle"/>
 				<textFieldExpression><![CDATA[(($F{facilityDescription} == null) ? "" : $F{facilityDescription}).toUpperCase()]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="0" y="95" width="555" height="15" isRemoveLineWhenBlank="true" uuid="9c9c9a79-2252-43af-9892-775978fda96a"/>
-				<textElement textAlignment="Center" verticalAlignment="Middle"/>
-				<textFieldExpression><![CDATA[($F{facilityName}.contains("CECOMA")) ?  ""  :  "MUNICÍPIO "  +(($F{municipality} == null) ? "" : $F{municipality}).toUpperCase()]]></textFieldExpression>
-			</textField>
-			<textField>
 				<reportElement x="0" y="80" width="554" height="15" isRemoveLineWhenBlank="true" uuid="dd7535f4-9a4d-474d-a7e2-707fd9b3f0b2"/>
 				<textElement textAlignment="Center" verticalAlignment="Middle"/>
-				<textFieldExpression><![CDATA[($F{facilityName}.contains("CECOMA")) ?  "" :  "GOVERNO DA PROVÍNCIA "  +(($F{province} == null) ? "" : $F{province}).toUpperCase()]]></textFieldExpression>
+				<textFieldExpression><![CDATA[($F{facilityName}.contains("CECOMA")) ?  "" :  "MUNICÍPIO "  + ($F{municipality} == null ? "" : $F{municipality}).toUpperCase()]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="1" y="63" width="554" height="15" isRemoveLineWhenBlank="true" uuid="393cbdbc-b665-4479-ae78-63dde3eb1c90"/>
+				<reportElement x="0" y="65" width="554" height="15" isRemoveLineWhenBlank="true" uuid="393cbdbc-b665-4479-ae78-63dde3eb1c90"/>
 				<textElement textAlignment="Center" verticalAlignment="Middle"/>
-				<textFieldExpression><![CDATA[$F{facilityName}.contains("CECOMA") ?  "MINISTÉRIO DA SAÚDE" : ""]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{facilityName}.contains("CECOMA") ?  "MINISTÉRIO DA SAÚDE" :  "GOVERNO DA PROVÍNCIA "  +($F{province} == null? "" : $F{province}).toUpperCase()]]></textFieldExpression>
 			</textField>
 		</band>
 	</pageHeader>
