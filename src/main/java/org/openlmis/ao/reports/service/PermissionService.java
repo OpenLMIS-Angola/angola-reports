@@ -1,5 +1,9 @@
 package org.openlmis.ao.reports.service;
 
+import static org.openlmis.ao.reports.i18n.PermissionMessageKeys.ERROR_NO_PERMISSION;
+
+import java.util.List;
+import java.util.UUID;
 import org.openlmis.ao.reports.dto.external.DetailedRoleAssignmentDto;
 import org.openlmis.ao.reports.dto.external.RequisitionDto;
 import org.openlmis.ao.reports.dto.external.ResultDto;
@@ -14,16 +18,12 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.oauth2.provider.OAuth2Authentication;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
-import java.util.UUID;
-
-import static org.openlmis.ao.reports.i18n.PermissionMessageKeys.ERROR_NO_PERMISSION;
-
 @Service
 @SuppressWarnings("PMD.TooManyMethods")
 public class PermissionService {
   public static final String REPORT_TEMPLATES_EDIT = "REPORT_TEMPLATES_EDIT";
   public static final String REPORTS_VIEW = "REPORTS_VIEW";
+  public static final String EMBEDDED_REPORTS_VIEW = "EMBEDDED_REPORTS_VIEW";
   public static final String ORDERS_VIEW = "ORDERS_VIEW";
   public static final String USERS_MANAGE = "USERS_MANAGE";
   public static final UUID ORDER_ID =
@@ -70,6 +70,13 @@ public class PermissionService {
     } else if (templateId.equals(USER_REPORT_TEMPLATE_ID)) {
       canMaganeUsers();
     }
+  }
+
+  /**
+   * Checks if current user has permission to view embedded reports.
+   */
+  public void canViewEmbeddedReports() {
+    checkPermission(EMBEDDED_REPORTS_VIEW);
   }
 
   /**

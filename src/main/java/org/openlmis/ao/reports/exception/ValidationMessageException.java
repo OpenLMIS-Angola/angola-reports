@@ -15,4 +15,5 @@ public class ValidationMessageException extends BaseMessageException {
   public ValidationMessageException(String messageKey) {
     super(messageKey);
   }
+
 }

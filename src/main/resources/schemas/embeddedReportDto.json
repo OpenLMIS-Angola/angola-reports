@@ -1,0 +1,30 @@
+{
+  "type": "object",
+  "$schema": "http://json-schema.org/draft-04/schema",
+  "title": "EmbeddedReportDto",
+  "description": "A single embedded report",
+  "properties": {
+    "id": {
+      "type": "string",
+      "title": "id"
+    },
+    "name": {
+      "type": "string",
+      "title": "name"
+    },
+    "url": {
+      "type": "string",
+      "title": "url"
+    },
+    "category": {
+      "type": "string",
+      "title": "category"
+    }
+  },
+  "required": [
+    "id",
+    "name",
+    "url",
+    "category"
+  ]
+}
