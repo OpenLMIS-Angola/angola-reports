@@ -8,4 +8,8 @@ public class PermissionMessageException extends BaseMessageException {
     super(message);
   }
 
+  public PermissionMessageException(String messageKey) {
+    super(messageKey);
+  }
+
 }
