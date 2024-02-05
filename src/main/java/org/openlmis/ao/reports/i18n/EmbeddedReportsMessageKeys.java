@@ -7,6 +7,8 @@ public class EmbeddedReportsMessageKeys extends ReportingMessageKeys {
       join(ERROR, "name", "duplicated");
   public static final String ERROR_EMBEDDED_REPORT_INVALID_PARAMS =
       join(ERROR, "invalid", "request", "params");
+  public static final String ERROR_EMBEDDED_REPORT_EMPTY_PARAM =
+      join(ERROR, PARAMETER, EMPTY);
   public static final String ERROR_EMBEDDED_REPORT_NOT_FOUND = join(ERROR, NOT_FOUND);
 
 }

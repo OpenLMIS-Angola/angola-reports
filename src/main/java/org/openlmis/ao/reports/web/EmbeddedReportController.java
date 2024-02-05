@@ -2,6 +2,7 @@ package org.openlmis.ao.reports.web;
 
 import static org.openlmis.ao.reports.i18n.EmbeddedReportsMessageKeys.ERROR_EMBEDDED_REPORT_NOT_FOUND;
 import static org.openlmis.ao.reports.i18n.EmbeddedReportsMessageKeys.ERROR_EMBEDDED_REPORT_NAME_DUPLICATED;
+import static org.openlmis.ao.reports.i18n.EmbeddedReportsMessageKeys.ERROR_EMBEDDED_REPORT_EMPTY_PARAM;
 import static org.openlmis.ao.reports.web.EmbeddedReportController.RESOURCE_PATH;
 
 import java.util.UUID;
@@ -99,6 +100,10 @@ public class EmbeddedReportController extends BaseController {
   public EmbeddedReportDto createEmbeddedReport(@RequestBody EmbeddedReportDto dto) {
     permissionService.canViewEmbeddedReports();
     LOGGER.debug("Creating new embedded report");
+
+    if (dto.getName().isEmpty() || dto.getUrl().isEmpty() || dto.getCategory().isEmpty()) {
+      throw new ValidationMessageException(new Message(ERROR_EMBEDDED_REPORT_EMPTY_PARAM));
+    }
 
     EmbeddedReport embeddedReportToUpdate = embeddedReportRepository.findByName(dto.getName());
     if (embeddedReportToUpdate == null) {

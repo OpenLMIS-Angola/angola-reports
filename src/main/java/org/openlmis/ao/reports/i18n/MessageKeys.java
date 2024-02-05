@@ -3,7 +3,9 @@ package org.openlmis.ao.reports.i18n;
 import java.util.Arrays;
 
 public class MessageKeys {
-  private static final String DELIMITER = ".";
+  protected static final String DELIMITER = ".";
+  protected static final String EMPTY = "empty";
+  protected static final String PARAMETER = "parameter";
 
   // General
   protected static final String SERVICE = "angola.reports";
