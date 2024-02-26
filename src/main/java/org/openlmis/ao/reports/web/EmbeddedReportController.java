@@ -4,6 +4,7 @@ import static org.openlmis.ao.reports.i18n.EmbeddedReportsMessageKeys.ERROR_EMBE
 import static org.openlmis.ao.reports.i18n.EmbeddedReportsMessageKeys.ERROR_EMBEDDED_REPORT_NAME_DUPLICATED;
 import static org.openlmis.ao.reports.web.EmbeddedReportController.RESOURCE_PATH;
 
+import javax.validation.Valid;
 import java.util.UUID;
 import org.apache.log4j.Logger;
 import org.openlmis.ao.reports.domain.EmbeddedReport;
@@ -96,7 +97,7 @@ public class EmbeddedReportController extends BaseController {
   @PostMapping
   @ResponseStatus(HttpStatus.OK)
   @ResponseBody
-  public EmbeddedReportDto createEmbeddedReport(@RequestBody EmbeddedReportDto dto) {
+  public EmbeddedReportDto createEmbeddedReport(@Valid @RequestBody EmbeddedReportDto dto) {
     permissionService.canViewEmbeddedReports();
     LOGGER.debug("Creating new embedded report");
 

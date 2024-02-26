@@ -3,13 +3,11 @@ package org.openlmis.ao.reports.i18n;
 public class ReportingMessageKeys extends MessageKeys {
   private static final String ERROR = join(SERVICE_ERROR, "reporting");
   private static final String INCORRECT_TYPE = "incorrectType";
-  private static final String PARAMETER = "parameter";
   private static final String CREATION = "creation";
   private static final String TEMPLATE = "template";
   private static final String INVALID = "invalid";
   private static final String MISSING = "missing";
   private static final String EXISTS = "exists";
-  private static final String EMPTY = "empty";
   private static final String FILE = "file";
 
 

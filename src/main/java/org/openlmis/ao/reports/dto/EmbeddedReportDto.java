@@ -15,6 +15,7 @@
 
 package org.openlmis.ao.reports.dto;
 
+import javax.validation.constraints.NotNull;
 import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
@@ -23,6 +24,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.hibernate.validator.constraints.NotEmpty;
 import org.openlmis.ao.reports.domain.EmbeddedReport;
 import org.openlmis.ao.reports.domain.EmbeddedReport.Exporter;
 import org.openlmis.ao.reports.domain.EmbeddedReport.Importer;
@@ -35,10 +37,16 @@ public class EmbeddedReportDto implements Importer, Exporter {
 
   private UUID id;
 
+  @NotNull(message = "Name needs to be provided")
+  @NotEmpty(message = "Name cannot be empty")
   private String name;
 
+  @NotNull(message = "URL needs to be provided")
+  @NotEmpty(message = "URL cannot be empty")
   private String url;
 
+  @NotNull(message = "Category needs to be provided")
+  @NotEmpty(message = "Category cannot be empty")
   private String category;
 
   /**
