@@ -24,6 +24,7 @@ public class PermissionService {
   public static final String REPORT_TEMPLATES_EDIT = "REPORT_TEMPLATES_EDIT";
   public static final String REPORTS_VIEW = "REPORTS_VIEW";
   public static final String EMBEDDED_REPORTS_VIEW = "EMBEDDED_REPORTS_VIEW";
+  public static final String EMBEDDED_REPORTS_CATEGORY_MANAGE = "EMBEDDED_REPORTS_CATEGORY_MANAGE";
   public static final String ORDERS_VIEW = "ORDERS_VIEW";
   public static final String USERS_MANAGE = "USERS_MANAGE";
   public static final UUID ORDER_ID =
@@ -77,6 +78,13 @@ public class PermissionService {
    */
   public void canViewEmbeddedReports() {
     checkPermission(EMBEDDED_REPORTS_VIEW);
+  }
+
+  /**
+   * Checks if current user has permission to view embedded reports.
+   */
+  public void canViewEmbeddedReportsCategory() {
+    checkPermission(EMBEDDED_REPORTS_CATEGORY_MANAGE);
   }
 
   /**

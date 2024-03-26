@@ -25,6 +25,7 @@ import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.openlmis.ao.reports.dto.EmbeddedReportDto;
 
 @Getter
 @Setter
@@ -44,6 +45,9 @@ public class EmbeddedReport extends BaseEntity {
   @Column(columnDefinition = TEXT_COLUMN_DEFINITION)
   private String category;
 
+  @Column(columnDefinition = BOOLEAN_COLUMN_DEFINITION)
+  private boolean enabled;
+
   /**
    * Create a new instance of Embedded report based on data from {@link EmbeddedReport.Importer}
    *
@@ -57,6 +61,7 @@ public class EmbeddedReport extends BaseEntity {
     embeddedReport.setName(importer.getName());
     embeddedReport.setUrl(importer.getUrl());
     embeddedReport.setCategory(importer.getCategory());
+    embeddedReport.setEnabled(importer.isEnabled());
 
     return embeddedReport;
   }
@@ -70,6 +75,19 @@ public class EmbeddedReport extends BaseEntity {
     this.name = embeddedReport.getName();
     this.url = embeddedReport.getUrl();
     this.category = embeddedReport.getCategory();
+    this.enabled = embeddedReport.isEnabled();
+  }
+
+  /**
+   * Copy values of attributes into new or updated Embedded Report.
+   *
+   * @param embeddedReportDto Embedded report with new values.
+   */
+  public void updateFrom(EmbeddedReportDto embeddedReportDto) {
+    this.name = embeddedReportDto.getName();
+    this.url = embeddedReportDto.getUrl();
+    this.category = embeddedReportDto.getCategory();
+    this.enabled = embeddedReportDto.isEnabled();
   }
 
   /**
@@ -82,6 +100,7 @@ public class EmbeddedReport extends BaseEntity {
     exporter.setName(name);
     exporter.setUrl(url);
     exporter.setCategory(category);
+    exporter.setEnabled(enabled);
   }
 
   public interface Exporter {
@@ -94,6 +113,8 @@ public class EmbeddedReport extends BaseEntity {
 
     void setCategory(String category);
 
+    void setEnabled(boolean enabled);
+
   }
 
   public interface Importer {
@@ -105,6 +126,8 @@ public class EmbeddedReport extends BaseEntity {
     String getUrl();
 
     String getCategory();
+
+    boolean isEnabled();
 
   }
 

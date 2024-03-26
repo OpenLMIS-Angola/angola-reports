@@ -10,6 +10,7 @@ public class EmbeddedReportDataBuilder {
   private String name = RandomStringUtils.random(6);
   private String url = "http://example.com";
   private String category = "default-category";
+  private boolean enabled = true;
 
   public EmbeddedReportDataBuilder withName(String name) {
     this.name = name;
@@ -23,6 +24,11 @@ public class EmbeddedReportDataBuilder {
 
   public EmbeddedReportDataBuilder withCategory(String category) {
     this.category = category;
+    return this;
+  }
+
+  public EmbeddedReportDataBuilder disabled() {
+    this.enabled = false;
     return this;
   }
 
@@ -46,7 +52,8 @@ public class EmbeddedReportDataBuilder {
     return new EmbeddedReport(
         name,
         url,
-        category
+        category,
+        enabled
     );
   }
 

@@ -18,6 +18,7 @@ import lombok.Setter;
 @MappedSuperclass
 public abstract class BaseEntity {
   protected static final String TEXT_COLUMN_DEFINITION = "text";
+  protected static final String BOOLEAN_COLUMN_DEFINITION = "boolean";
   protected static final String UUID_COLUMN_DEFINITION = "pg-uuid";
 
   @Id

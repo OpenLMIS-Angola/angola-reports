@@ -25,15 +25,14 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.hibernate.validator.constraints.NotEmpty;
-import org.openlmis.ao.reports.domain.EmbeddedReport;
-import org.openlmis.ao.reports.domain.EmbeddedReport.Exporter;
-import org.openlmis.ao.reports.domain.EmbeddedReport.Importer;
+import org.openlmis.ao.reports.domain.EmbeddedReportCategory;
 
 @Getter
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class EmbeddedReportDto implements Importer, Exporter {
+public class EmbeddedReportCategoryDto implements EmbeddedReportCategory.Importer,
+    EmbeddedReportCategory.Exporter {
 
   private UUID id;
 
@@ -41,43 +40,35 @@ public class EmbeddedReportDto implements Importer, Exporter {
   @NotEmpty(message = "Name cannot be empty")
   private String name;
 
-  @NotNull(message = "URL needs to be provided")
-  @NotEmpty(message = "URL cannot be empty")
-  private String url;
-
-  @NotNull(message = "Category needs to be provided")
-  @NotEmpty(message = "Category cannot be empty")
-  private String category;
-
-  private boolean enabled;
-
   /**
-   * Create new instance of EmbeddedReportDto based on given {@link EmbeddedReport}
+   * Create new instance of EmbeddedReportCategoryDto based on given {@link EmbeddedReportCategory}
    *
-   * @param embeddedReport instance of Embedded Report
-   * @return new instance of EmbeddedReportDto.
+   * @param embeddedReportCategory instance of Embedded Report Category
+   * @return new instance of EmbeddedReportCategoryDto.
    */
-  public static EmbeddedReportDto newInstance(EmbeddedReport embeddedReport) {
-    if (embeddedReport == null) {
+  public static EmbeddedReportCategoryDto newInstance(
+      EmbeddedReportCategory embeddedReportCategory) {
+    if (embeddedReportCategory == null) {
       return null;
     }
 
-    EmbeddedReportDto jasperTemplateDto = new EmbeddedReportDto();
-    embeddedReport.export(jasperTemplateDto);
+    EmbeddedReportCategoryDto embeddedReportCategoryDto = new EmbeddedReportCategoryDto();
+    embeddedReportCategory.export(embeddedReportCategoryDto);
 
-    return jasperTemplateDto;
+    return embeddedReportCategoryDto;
   }
 
   /**
-   * Create new list of EmbeddedReportDto based on given list of {@link EmbeddedReport}
+   * Create new list of EmbeddedReportCategoryDto based on given list
+   * of {@link EmbeddedReportCategory}
    *
-   * @param embeddedReports list of {@link EmbeddedReport}
-   * @return new list of EmbeddedReportDto.
+   * @param embeddedReportCategories list of {@link EmbeddedReportCategory}
+   * @return new list of EmbeddedReportCategoryDto.
    */
-  public static List<EmbeddedReportDto> newInstance(Iterable<EmbeddedReport> embeddedReports) {
-    return StreamSupport.stream(embeddedReports.spliterator(), false)
-        .map(EmbeddedReportDto::newInstance)
+  public static List<EmbeddedReportCategoryDto> newInstance(
+      Iterable<EmbeddedReportCategory> embeddedReportCategories) {
+    return StreamSupport.stream(embeddedReportCategories.spliterator(), false)
+        .map(EmbeddedReportCategoryDto::newInstance)
         .collect(Collectors.toList());
   }
-
 }

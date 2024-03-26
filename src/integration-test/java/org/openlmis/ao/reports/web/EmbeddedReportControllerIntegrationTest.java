@@ -1,5 +1,6 @@
 package org.openlmis.ao.reports.web;
 
+import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertThat;
 import static org.mockito.BDDMockito.given;
@@ -8,10 +9,18 @@ import static org.mockito.Mockito.atLeastOnce;
 import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.verify;
 
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import guru.nidi.ramltester.junit.RamlMatchers;
+
+import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
+import java.util.Optional;
 import java.util.UUID;
+
+import org.apache.http.HttpStatus;
 import org.junit.Before;
 import org.junit.Test;
 import org.openlmis.ao.reports.domain.EmbeddedReport;
@@ -23,6 +32,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 
 @SuppressWarnings("PMD.TooManyMethods")
@@ -30,6 +40,9 @@ public class EmbeddedReportControllerIntegrationTest extends BaseWebIntegrationT
 
   private static final String RESOURCE_URL = "/api/reports/embeddedReports";
   private static final String ID_URL = RESOURCE_URL + "/{id}";
+  public static final String ID = "id";
+  public static final String NAME = "name";
+  public static final String ENABLED = "enabled";
 
   @MockBean
   private EmbeddedReportRepository embeddedReportRepository;
@@ -50,7 +63,7 @@ public class EmbeddedReportControllerIntegrationTest extends BaseWebIntegrationT
     EmbeddedReportDto result = restAssured.given()
         .queryParam(ACCESS_TOKEN, getToken())
         .contentType(MediaType.APPLICATION_JSON_VALUE)
-        .pathParam("id", embeddedReport.getId())
+        .pathParam(ID, embeddedReport.getId())
         .when()
         .get(ID_URL)
         .then()
@@ -71,7 +84,7 @@ public class EmbeddedReportControllerIntegrationTest extends BaseWebIntegrationT
     restAssured.given()
         .queryParam(ACCESS_TOKEN, getToken())
         .contentType(MediaType.APPLICATION_JSON_VALUE)
-        .pathParam("id", UUID.randomUUID())
+        .pathParam(ID, UUID.randomUUID())
         .when()
         .get(ID_URL)
         .then()
@@ -117,7 +130,7 @@ public class EmbeddedReportControllerIntegrationTest extends BaseWebIntegrationT
     restAssured.given()
         .queryParam(ACCESS_TOKEN, getToken())
         .contentType(MediaType.APPLICATION_JSON_VALUE)
-        .pathParam("id", embeddedReport.getId())
+        .pathParam(ID, embeddedReport.getId())
         .when()
         .delete(ID_URL)
         .then()
@@ -137,13 +150,71 @@ public class EmbeddedReportControllerIntegrationTest extends BaseWebIntegrationT
     restAssured.given()
         .queryParam(ACCESS_TOKEN, getToken())
         .contentType(MediaType.APPLICATION_JSON_VALUE)
-        .pathParam("id", UUID.randomUUID())
+        .pathParam(ID, UUID.randomUUID())
         .when()
         .delete(ID_URL)
         .then()
         .statusCode(404);
 
     // then
+    assertThat(RAML_ASSERT_MESSAGE, restAssured.getLastReport(), RamlMatchers.hasNoViolations());
+  }
+
+  @Test
+  public void shouldUpdateEmbeddedReport() {
+    // given
+    EmbeddedReport embeddedReport = new EmbeddedReportDataBuilder().disabled().build();
+    EmbeddedReportDto embeddedReportDto = EmbeddedReportDto.newInstance(embeddedReport);
+    embeddedReportDto.setName("new_name");
+    given(embeddedReportRepository.findById(embeddedReport.getId()))
+        .willReturn(Optional.of(embeddedReport));
+
+    // when
+    restAssured.given()
+        .queryParam(ACCESS_TOKEN, getToken())
+        .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
+        .contentType(MediaType.APPLICATION_JSON_VALUE)
+        .pathParam(ID, embeddedReport.getId())
+        .body(embeddedReportDto)
+        .when()
+        .put(ID_URL)
+        .then()
+        .statusCode(HttpStatus.SC_OK)
+        .body(NAME, is(embeddedReportDto.getName()))
+        .body(ENABLED, is(embeddedReportDto.isEnabled()));
+
+    // then
+    assertThat(RAML_ASSERT_MESSAGE, restAssured.getLastReport(), RamlMatchers.hasNoViolations());
+  }
+
+  @Test
+  public void shouldCreateEmbeddedReportIfEmbeddedReportDoesNotExistForUpdatePEndpoint()
+      throws IOException {
+    // given
+    EmbeddedReportDto embeddedReportDto = EmbeddedReportDto
+        .newInstance(new EmbeddedReportDataBuilder().build());
+    String erJson = "{\"url\":\"" + embeddedReportDto.getUrl() + "\",\"name\":\""
+        + embeddedReportDto.getName() + "\",\"category\":\""
+        + embeddedReportDto.getCategory() + "\"}";
+    Map<String, String> widgetMap = new ObjectMapper().readValue(erJson,
+        new TypeReference<Map<String, String>>() {
+        });
+    UUID pathId = UUID.randomUUID();
+    given(embeddedReportRepository.findById(pathId)).willReturn(Optional.empty());
+
+    // when
+    restAssured.given()
+        .queryParam(ACCESS_TOKEN, getToken())
+        .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
+        .contentType(MediaType.APPLICATION_JSON_VALUE)
+        .pathParam(ID, pathId)
+        .body(widgetMap)
+        .when()
+        .put(ID_URL)
+        .then()
+        .statusCode(HttpStatus.SC_OK)
+        .body(NAME, is(embeddedReportDto.getName()));
+
     assertThat(RAML_ASSERT_MESSAGE, restAssured.getLastReport(), RamlMatchers.hasNoViolations());
   }
 

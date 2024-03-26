@@ -1,6 +1,7 @@
 package org.openlmis.ao.reports.repository;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 import org.openlmis.ao.reports.domain.EmbeddedReport;
 import org.springframework.data.domain.Page;
@@ -17,5 +18,7 @@ public interface EmbeddedReportRepository extends PagingAndSortingRepository<Emb
   Page<EmbeddedReport> findAll(Pageable pageable);
 
   Page<EmbeddedReport> findAllByCategory(String category, Pageable pageable);
+
+  Optional<EmbeddedReport> findById(UUID id);
 
 }

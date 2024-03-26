@@ -5,6 +5,8 @@ import static org.openlmis.ao.reports.i18n.EmbeddedReportsMessageKeys.ERROR_EMBE
 import static org.openlmis.ao.reports.web.EmbeddedReportController.RESOURCE_PATH;
 
 import javax.validation.Valid;
+import java.util.Objects;
+import java.util.Optional;
 import java.util.UUID;
 import org.apache.log4j.Logger;
 import org.openlmis.ao.reports.domain.EmbeddedReport;
@@ -23,7 +25,16 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Controller;
 import org.springframework.http.HttpStatus;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.ResponseStatus;
 
 
 @Controller
@@ -133,6 +144,37 @@ public class EmbeddedReportController extends BaseController {
       embeddedReportRepository.delete(embeddedReport);
       LOGGER.debug("Deleted embedded report with id: " + reportId);
     }
+  }
+
+  /**
+   * Allows updating embedded report.
+   *
+   * @param id UUID of embedded report we want to update
+   */
+  @PutMapping(value = "/{id}")
+  @ResponseStatus(HttpStatus.OK)
+  @ResponseBody
+  public EmbeddedReportDto updateEmbeddedReport(@PathVariable("id") UUID id,
+      @RequestBody EmbeddedReportDto embeddedReport) {
+    permissionService.canViewEmbeddedReports();
+    if (null != embeddedReport.getId() && !Objects.equals(embeddedReport.getId(), id)) {
+      throw new ValidationMessageException(
+          EmbeddedReportsMessageKeys.ERROR_EMBEDDED_REPORT_ID_MISMATCH);
+    }
+
+    LOGGER.debug("Updating embedded report");
+    EmbeddedReport db;
+    Optional<EmbeddedReport> embeddedReportOptional = embeddedReportRepository.findById(id);
+    if (embeddedReportOptional.isPresent()) {
+      db = embeddedReportOptional.get();
+      db.updateFrom(embeddedReport);
+    } else {
+      db = EmbeddedReport.newInstance(embeddedReport);
+      db.setId(id);
+    }
+    embeddedReportRepository.save(db);
+
+    return EmbeddedReportDto.newInstance(db);
   }
 
 }
