@@ -6,6 +6,7 @@ import static org.junit.Assert.assertThat;
 import java.util.List;
 import org.junit.Test;
 import org.openlmis.ao.reports.domain.EmbeddedReport;
+import org.openlmis.ao.testutils.EmbeddedReportCategoryDataBuilder;
 import org.openlmis.ao.testutils.EmbeddedReportDataBuilder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
@@ -44,18 +45,21 @@ public class EmbeddedReportRepositoryIntegrationTest extends
   public void shouldFindAllEmbeddedReportsByCategory() {
     Pageable pageable = new PageRequest(0, 2);
     EmbeddedReport matchingReport1 = new EmbeddedReportDataBuilder()
-        .withCategory(DEFAULT_CATEGORY).build();
+        .withCategory(new EmbeddedReportCategoryDataBuilder().withName(DEFAULT_CATEGORY).build())
+        .build();
     EmbeddedReport matchingReport2 = new EmbeddedReportDataBuilder()
-        .withCategory(DEFAULT_CATEGORY).build();
+        .withCategory(new EmbeddedReportCategoryDataBuilder().withName(DEFAULT_CATEGORY).build())
+        .build();
     EmbeddedReport notMatchingReport = new EmbeddedReportDataBuilder()
-        .withCategory(UNIQUE_CATEGORY).build();
+        .withCategory(new EmbeddedReportCategoryDataBuilder().withName(UNIQUE_CATEGORY).build())
+        .build();
 
     embeddedReportRepository.save(matchingReport1);
     embeddedReportRepository.save(matchingReport2);
     embeddedReportRepository.save(notMatchingReport);
 
     List<EmbeddedReport> found =
-        embeddedReportRepository.findAllByCategory(DEFAULT_CATEGORY, pageable).getContent();
+        embeddedReportRepository.findAllByCategoryName(DEFAULT_CATEGORY, pageable).getContent();
 
     assertThat(found.size(), is(2));
   }

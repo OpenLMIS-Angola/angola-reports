@@ -18,6 +18,8 @@ package org.openlmis.ao.reports.domain;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import java.util.UUID;
 import lombok.AllArgsConstructor;
@@ -42,8 +44,9 @@ public class EmbeddedReport extends BaseEntity {
   @Column(columnDefinition = TEXT_COLUMN_DEFINITION)
   private String url;
 
-  @Column(columnDefinition = TEXT_COLUMN_DEFINITION)
-  private String category;
+  @ManyToOne
+  @JoinColumn(name = "categoryid", nullable = false)
+  private EmbeddedReportCategory category;
 
   @Column(columnDefinition = BOOLEAN_COLUMN_DEFINITION)
   private boolean enabled;
@@ -60,7 +63,7 @@ public class EmbeddedReport extends BaseEntity {
     embeddedReport.setId(importer.getId());
     embeddedReport.setName(importer.getName());
     embeddedReport.setUrl(importer.getUrl());
-    embeddedReport.setCategory(importer.getCategory());
+    embeddedReport.setCategory(EmbeddedReportCategory.newInstance(importer.getCategory()));
     embeddedReport.setEnabled(importer.isEnabled());
 
     return embeddedReport;
@@ -86,7 +89,6 @@ public class EmbeddedReport extends BaseEntity {
   public void updateFrom(EmbeddedReportDto embeddedReportDto) {
     this.name = embeddedReportDto.getName();
     this.url = embeddedReportDto.getUrl();
-    this.category = embeddedReportDto.getCategory();
     this.enabled = embeddedReportDto.isEnabled();
   }
 
@@ -111,7 +113,7 @@ public class EmbeddedReport extends BaseEntity {
 
     void setUrl(String url);
 
-    void setCategory(String category);
+    void setCategory(EmbeddedReportCategory category);
 
     void setEnabled(boolean enabled);
 
@@ -125,7 +127,7 @@ public class EmbeddedReport extends BaseEntity {
 
     String getUrl();
 
-    String getCategory();
+    EmbeddedReportCategory.Importer getCategory();
 
     boolean isEnabled();
 

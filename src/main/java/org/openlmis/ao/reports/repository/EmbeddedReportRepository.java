@@ -17,7 +17,7 @@ public interface EmbeddedReportRepository extends PagingAndSortingRepository<Emb
 
   Page<EmbeddedReport> findAll(Pageable pageable);
 
-  Page<EmbeddedReport> findAllByCategory(String category, Pageable pageable);
+  Page<EmbeddedReport> findAllByCategoryName(String name, Pageable pageable);
 
   Optional<EmbeddedReport> findById(UUID id);
 

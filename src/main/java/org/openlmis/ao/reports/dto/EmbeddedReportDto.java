@@ -28,6 +28,7 @@ import org.hibernate.validator.constraints.NotEmpty;
 import org.openlmis.ao.reports.domain.EmbeddedReport;
 import org.openlmis.ao.reports.domain.EmbeddedReport.Exporter;
 import org.openlmis.ao.reports.domain.EmbeddedReport.Importer;
+import org.openlmis.ao.reports.domain.EmbeddedReportCategory;
 
 @Getter
 @Setter
@@ -46,8 +47,7 @@ public class EmbeddedReportDto implements Importer, Exporter {
   private String url;
 
   @NotNull(message = "Category needs to be provided")
-  @NotEmpty(message = "Category cannot be empty")
-  private String category;
+  private EmbeddedReportCategoryDto category;
 
   private boolean enabled;
 
@@ -80,4 +80,9 @@ public class EmbeddedReportDto implements Importer, Exporter {
         .collect(Collectors.toList());
   }
 
+  @Override
+  public void setCategory(EmbeddedReportCategory category) {
+    this.category = new EmbeddedReportCategoryDto();
+    category.export(this.category);
+  }
 }

@@ -17,8 +17,8 @@
       "title": "url"
     },
     "category": {
-      "type": "string",
-      "title": "category"
+      "type": "object",
+      "$ref": "embeddedReportCategoryDto.json"
     }
   }
 }
