@@ -9,23 +9,20 @@ import static org.mockito.Mockito.atLeastOnce;
 import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.verify;
 
-import com.fasterxml.jackson.core.type.TypeReference;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import guru.nidi.ramltester.junit.RamlMatchers;
-
-import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
-
 import org.apache.http.HttpStatus;
 import org.junit.Before;
 import org.junit.Test;
 import org.openlmis.ao.reports.domain.EmbeddedReport;
+import org.openlmis.ao.reports.domain.EmbeddedReportCategory;
 import org.openlmis.ao.reports.dto.EmbeddedReportDto;
+import org.openlmis.ao.reports.repository.EmbeddedReportCategoryRepository;
 import org.openlmis.ao.reports.repository.EmbeddedReportRepository;
+import org.openlmis.ao.testutils.EmbeddedReportCategoryDataBuilder;
 import org.openlmis.ao.testutils.EmbeddedReportDataBuilder;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.data.domain.Page;
@@ -47,6 +44,9 @@ public class EmbeddedReportControllerIntegrationTest extends BaseWebIntegrationT
   @MockBean
   private EmbeddedReportRepository embeddedReportRepository;
 
+  @MockBean
+  private EmbeddedReportCategoryRepository embeddedReportCategoryRepository;
+
   @Before
   public void setUp() {
     mockUserAuthenticated();
@@ -56,7 +56,9 @@ public class EmbeddedReportControllerIntegrationTest extends BaseWebIntegrationT
   @Test
   public void shouldGetExistentEmbeddedReport() {
     // given
-    EmbeddedReport embeddedReport = new EmbeddedReportDataBuilder().build();
+    EmbeddedReport embeddedReport = new EmbeddedReportDataBuilder()
+        .withCategory(new EmbeddedReportCategoryDataBuilder().build())
+        .build();
     given(embeddedReportRepository.findOne(embeddedReport.getId())).willReturn(embeddedReport);
 
     // when
@@ -97,8 +99,12 @@ public class EmbeddedReportControllerIntegrationTest extends BaseWebIntegrationT
   @Test
   public void shouldGetAllEmbeddedReports() {
     // given
-    EmbeddedReport report1 = new EmbeddedReportDataBuilder().build();
-    EmbeddedReport report2 = new EmbeddedReportDataBuilder().build();
+    EmbeddedReport report1 = new EmbeddedReportDataBuilder()
+        .withCategory(new EmbeddedReportCategoryDataBuilder().build())
+        .build();
+    EmbeddedReport report2 = new EmbeddedReportDataBuilder()
+        .withCategory(new EmbeddedReportCategoryDataBuilder().build())
+        .build();
     List<EmbeddedReport> reports = Arrays.asList(report1, report2);
 
     Pageable pageable = new PageRequest(0, reports.size());
@@ -163,11 +169,18 @@ public class EmbeddedReportControllerIntegrationTest extends BaseWebIntegrationT
   @Test
   public void shouldUpdateEmbeddedReport() {
     // given
-    EmbeddedReport embeddedReport = new EmbeddedReportDataBuilder().disabled().build();
+    EmbeddedReportCategory category = new EmbeddedReportCategoryDataBuilder().build();
+    EmbeddedReport embeddedReport = new EmbeddedReportDataBuilder()
+        .withCategory(category)
+        .disabled()
+        .build();
     EmbeddedReportDto embeddedReportDto = EmbeddedReportDto.newInstance(embeddedReport);
     embeddedReportDto.setName("new_name");
     given(embeddedReportRepository.findById(embeddedReport.getId()))
         .willReturn(Optional.of(embeddedReport));
+    given(embeddedReportCategoryRepository.findById(embeddedReport.getCategory().getId()))
+        .willReturn(Optional.of(category));
+
 
     // when
     restAssured.given()
@@ -184,37 +197,6 @@ public class EmbeddedReportControllerIntegrationTest extends BaseWebIntegrationT
         .body(ENABLED, is(embeddedReportDto.isEnabled()));
 
     // then
-    assertThat(RAML_ASSERT_MESSAGE, restAssured.getLastReport(), RamlMatchers.hasNoViolations());
-  }
-
-  @Test
-  public void shouldCreateEmbeddedReportIfEmbeddedReportDoesNotExistForUpdatePEndpoint()
-      throws IOException {
-    // given
-    EmbeddedReportDto embeddedReportDto = EmbeddedReportDto
-        .newInstance(new EmbeddedReportDataBuilder().build());
-    String erJson = "{\"url\":\"" + embeddedReportDto.getUrl() + "\",\"name\":\""
-        + embeddedReportDto.getName() + "\",\"category\":\""
-        + embeddedReportDto.getCategory() + "\"}";
-    Map<String, String> widgetMap = new ObjectMapper().readValue(erJson,
-        new TypeReference<Map<String, String>>() {
-        });
-    UUID pathId = UUID.randomUUID();
-    given(embeddedReportRepository.findById(pathId)).willReturn(Optional.empty());
-
-    // when
-    restAssured.given()
-        .queryParam(ACCESS_TOKEN, getToken())
-        .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
-        .contentType(MediaType.APPLICATION_JSON_VALUE)
-        .pathParam(ID, pathId)
-        .body(widgetMap)
-        .when()
-        .put(ID_URL)
-        .then()
-        .statusCode(HttpStatus.SC_OK)
-        .body(NAME, is(embeddedReportDto.getName()));
-
     assertThat(RAML_ASSERT_MESSAGE, restAssured.getLastReport(), RamlMatchers.hasNoViolations());
   }
 
