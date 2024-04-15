@@ -10,7 +10,7 @@
 
   "scripts":
   {
-    "runApiSpecConverter": "api-spec-converter --from raml --to swagger_2 /build/resources/main/api-definition-swagger.yaml > /build/resources/main/static/reports/docs/api-definition.json",
-    "runApiHtmlConverter": "raml2html --input /build/resources/main/api-definition-raml.yaml --output /build/resources/main/api-definition.html"
+    "runApiSpecConverter": "api-spec-converter --from raml --to swagger_2 ./build/resources/main/api-definition-swagger.yaml > ./build/resources/main/static/reports/docs/api-definition.json",
+    "runApiHtmlConverter": "raml2html --input ./build/resources/main/api-definition-raml.yaml --output ./build/resources/main/api-definition.html"
   }
 }
