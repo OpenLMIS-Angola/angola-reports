@@ -33,17 +33,10 @@ configure(checkApiIsRaml) {
 //Usage: gradle sonarqube
 sonarqube {
     properties {
-        property "sonar.projectName", "Angola Reports Service"
-        property "sonar.projectKey", "org.sonarqube:angola-reports"
-        property "sonar.projectVersion", version
-        property "sonar.host.url", "http://sonar.openlmis.org"
-        property "sonar.java.coveragePlugin", "jacoco"
-        //Tells SonarQube where the unit tests execution reports are
-        property "sonar.junit.reportsPath", "build/test-results/test"
-        //Tells SonarQube where the unit tests code coverage report is
-        property "sonar.jacoco.reportPath", "build/jacoco/test.exec"
-        //Tells SonarQube where the integration tests code coverage report is
-        property "sonar.jacoco.itReportPath", "build/jacoco/integrationTest.exec"
-    properties["sonar.tests"] += sourceSets.integrationTest.java
+        property "sonar.projectKey", "OpenLMIS-Angola_angola-reports"
+        property "sonar.organization", "openlmis-angola"
+        property "sonar.host.url", "https://sonarcloud.io"
+        property "sonar.java.source", "17"
+        property "sonar.coverage.jacoco.xmlReportPaths", "./report.xml"
     }
 }
