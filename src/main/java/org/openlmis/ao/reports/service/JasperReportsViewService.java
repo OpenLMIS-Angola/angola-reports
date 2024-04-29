@@ -307,8 +307,11 @@ public class JasperReportsViewService {
 
     parameters.put(DATASOURCE, new JRBeanCollectionDataSource(items));
     parameters.put("order", order);
-    parameters.put("orderingPeriod", order.getEmergency()
-        ? order.getProcessingPeriod() : findNextPeriod(order.getProcessingPeriod(), null));
+
+    if (order.getProcessingPeriod() != null) {
+      parameters.put("orderingPeriod", order.getEmergency()
+          ? order.getProcessingPeriod() : findNextPeriod(order.getProcessingPeriod(), null));
+    }
 
     return new ModelAndView(jasperView, parameters);
   }
@@ -466,8 +469,12 @@ public class JasperReportsViewService {
       OrderDto order = orderService.findOne(
           UUID.fromString(params.get("order").toString())
       );
-      ProcessingPeriodDto period = order.getEmergency() ? order.getProcessingPeriod() :
-          findNextPeriod(order.getProcessingPeriod(), null);
+
+      ProcessingPeriodDto period = null;
+      if (order.getProcessingPeriod() != null) {
+        period = order.getEmergency() ? order.getProcessingPeriod() :
+            findNextPeriod(order.getProcessingPeriod(), null);
+      }
       values = Arrays.asList(
           order.getProgram().getName(),
           (period != null) ? period.getName() : "",
