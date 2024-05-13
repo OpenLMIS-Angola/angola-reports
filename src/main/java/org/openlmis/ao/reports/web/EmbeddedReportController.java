@@ -166,9 +166,6 @@ public class EmbeddedReportController extends BaseController {
     if (null != embeddedReportDto.getId() && !Objects.equals(embeddedReportDto.getId(), id)) {
       throw new ValidationMessageException(
           EmbeddedReportsMessageKeys.ERROR_EMBEDDED_REPORT_ID_MISMATCH);
-    } else if (embeddedReportDto.getCategory() == null) {
-      throw new ValidationMessageException(
-          EmbeddedReportCategoryMessageKeys.ERROR_EMBEDDED_REPORT_CATEGORY_CANNOT_BE_NULL);
     }
 
     LOGGER.debug("Updating embedded report");
@@ -186,9 +183,13 @@ public class EmbeddedReportController extends BaseController {
   }
 
   private void updateReport(EmbeddedReportDto newReport, EmbeddedReport reportToUpdate) {
-    EmbeddedReportCategory category = findCategory(newReport);
     reportToUpdate.updateFrom(newReport);
-    reportToUpdate.setCategory(category);
+    if (newReport.getCategory() != null) {
+      EmbeddedReportCategory category = findCategory(newReport);
+      reportToUpdate.setCategory(category);
+    } else {
+      reportToUpdate.setCategory(null);
+    }
   }
 
   private EmbeddedReportCategory findCategory(EmbeddedReportDto newReport) {

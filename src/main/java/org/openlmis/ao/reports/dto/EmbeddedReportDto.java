@@ -46,7 +46,6 @@ public class EmbeddedReportDto implements Importer, Exporter {
   @NotEmpty(message = "URL cannot be empty")
   private String url;
 
-  @NotNull(message = "Category needs to be provided")
   private EmbeddedReportCategoryDto category;
 
   private boolean enabled;

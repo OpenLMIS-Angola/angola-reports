@@ -8,6 +8,7 @@ import java.util.Map;
 import java.util.Objects;
 
 public enum OrderStatusDto {
+  CREATING,
   ORDERED,
   FULFILLING,
   SHIPPED,
@@ -18,6 +19,7 @@ public enum OrderStatusDto {
 
   private static final Map<OrderStatusDto, String> TRANSLATIONS =
       Collections.unmodifiableMap(new HashMap<OrderStatusDto, String>() {{
+          put(CREATING, "Criando");
           put(ORDERED, "Pediu");
           put(FULFILLING, "A executar pedido");
           put(SHIPPED, "Enviado");

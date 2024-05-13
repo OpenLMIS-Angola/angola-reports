@@ -45,7 +45,7 @@ public class EmbeddedReport extends BaseEntity {
   private String url;
 
   @ManyToOne
-  @JoinColumn(name = "categoryid", nullable = false)
+  @JoinColumn(name = "categoryid")
   private EmbeddedReportCategory category;
 
   @Column(columnDefinition = BOOLEAN_COLUMN_DEFINITION)
@@ -63,7 +63,9 @@ public class EmbeddedReport extends BaseEntity {
     embeddedReport.setId(importer.getId());
     embeddedReport.setName(importer.getName());
     embeddedReport.setUrl(importer.getUrl());
-    embeddedReport.setCategory(EmbeddedReportCategory.newInstance(importer.getCategory()));
+    if (importer.getCategory() != null) {
+      embeddedReport.setCategory(EmbeddedReportCategory.newInstance(importer.getCategory()));
+    }
     embeddedReport.setEnabled(importer.isEnabled());
 
     return embeddedReport;
