@@ -3,13 +3,15 @@ package org.openlmis.ao.testutils;
 import java.util.UUID;
 import org.apache.commons.lang.RandomStringUtils;
 import org.openlmis.ao.reports.domain.EmbeddedReport;
+import org.openlmis.ao.reports.domain.EmbeddedReportCategory;
 
 public class EmbeddedReportDataBuilder {
 
   private final UUID id = UUID.randomUUID();
   private String name = RandomStringUtils.random(6);
   private String url = "http://example.com";
-  private String category = "default-category";
+  private EmbeddedReportCategory category = new EmbeddedReportCategoryDataBuilder().buildAsNew();
+  private boolean enabled = true;
 
   public EmbeddedReportDataBuilder withName(String name) {
     this.name = name;
@@ -21,8 +23,13 @@ public class EmbeddedReportDataBuilder {
     return this;
   }
 
-  public EmbeddedReportDataBuilder withCategory(String category) {
+  public EmbeddedReportDataBuilder withCategory(EmbeddedReportCategory category) {
     this.category = category;
+    return this;
+  }
+
+  public EmbeddedReportDataBuilder disabled() {
+    this.enabled = false;
     return this;
   }
 
@@ -46,7 +53,8 @@ public class EmbeddedReportDataBuilder {
     return new EmbeddedReport(
         name,
         url,
-        category
+        category,
+        enabled
     );
   }
 

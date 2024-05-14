@@ -6,6 +6,8 @@ import static org.junit.Assert.assertThat;
 import java.util.List;
 import org.junit.Test;
 import org.openlmis.ao.reports.domain.EmbeddedReport;
+import org.openlmis.ao.reports.domain.EmbeddedReportCategory;
+import org.openlmis.ao.testutils.EmbeddedReportCategoryDataBuilder;
 import org.openlmis.ao.testutils.EmbeddedReportDataBuilder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
@@ -21,6 +23,9 @@ public class EmbeddedReportRepositoryIntegrationTest extends
   @Autowired
   private EmbeddedReportRepository embeddedReportRepository;
 
+  @Autowired
+  private EmbeddedReportCategoryRepository embeddedReportCategoryRepository;
+
   @Override
   EmbeddedReportRepository getRepository() {
     return this.embeddedReportRepository;
@@ -28,7 +33,13 @@ public class EmbeddedReportRepositoryIntegrationTest extends
 
   @Override
   protected EmbeddedReport generateInstance() {
-    return new EmbeddedReportDataBuilder().withName(NAME).buildAsNew();
+    EmbeddedReportCategory category = embeddedReportCategoryRepository
+        .save(new EmbeddedReportCategoryDataBuilder().buildAsNew());
+
+    return new EmbeddedReportDataBuilder()
+        .withName(NAME)
+        .withCategory(category)
+        .buildAsNew();
   }
 
   @Test
@@ -43,19 +54,28 @@ public class EmbeddedReportRepositoryIntegrationTest extends
   @Test
   public void shouldFindAllEmbeddedReportsByCategory() {
     Pageable pageable = new PageRequest(0, 2);
+    EmbeddedReportCategory defaultCategory = embeddedReportCategoryRepository.save(
+        new EmbeddedReportCategoryDataBuilder().withName(DEFAULT_CATEGORY).build()
+    );
+    EmbeddedReportCategory uniqueCategory = embeddedReportCategoryRepository.save(
+        new EmbeddedReportCategoryDataBuilder().withName(UNIQUE_CATEGORY).build()
+    );
     EmbeddedReport matchingReport1 = new EmbeddedReportDataBuilder()
-        .withCategory(DEFAULT_CATEGORY).build();
+        .withCategory(defaultCategory)
+        .build();
     EmbeddedReport matchingReport2 = new EmbeddedReportDataBuilder()
-        .withCategory(DEFAULT_CATEGORY).build();
+        .withCategory(defaultCategory)
+        .build();
     EmbeddedReport notMatchingReport = new EmbeddedReportDataBuilder()
-        .withCategory(UNIQUE_CATEGORY).build();
+        .withCategory(uniqueCategory)
+        .build();
 
     embeddedReportRepository.save(matchingReport1);
     embeddedReportRepository.save(matchingReport2);
     embeddedReportRepository.save(notMatchingReport);
 
     List<EmbeddedReport> found =
-        embeddedReportRepository.findAllByCategory(DEFAULT_CATEGORY, pageable).getContent();
+        embeddedReportRepository.findAllByCategoryName(DEFAULT_CATEGORY, pageable).getContent();
 
     assertThat(found.size(), is(2));
   }

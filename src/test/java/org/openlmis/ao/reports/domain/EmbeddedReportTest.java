@@ -17,7 +17,8 @@ public class EmbeddedReportTest {
 
     assertThat(importer.getName()).isEqualTo(newInstance.getName());
     assertThat(importer.getUrl()).isEqualTo(newInstance.getUrl());
-    assertThat(importer.getCategory()).isEqualTo(newInstance.getCategory());
+    assertThat(importer.getCategory().getId()).isEqualTo(newInstance.getCategory().getId());
+    assertThat(importer.isEnabled()).isEqualTo(newInstance.isEnabled());
   }
 
   @Test
@@ -29,7 +30,8 @@ public class EmbeddedReportTest {
 
     assertThat(dto.getName()).isEqualTo(embeddedReport.getName());
     assertThat(dto.getUrl()).isEqualTo(embeddedReport.getUrl());
-    assertThat(dto.getCategory()).isEqualTo(embeddedReport.getCategory());
+    assertThat(dto.getCategory().getId()).isEqualTo(embeddedReport.getCategory().getId());
+    assertThat(dto.isEnabled()).isEqualTo(embeddedReport.isEnabled());
   }
 
 }

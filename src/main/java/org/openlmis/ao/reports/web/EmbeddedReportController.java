@@ -5,13 +5,18 @@ import static org.openlmis.ao.reports.i18n.EmbeddedReportsMessageKeys.ERROR_EMBE
 import static org.openlmis.ao.reports.web.EmbeddedReportController.RESOURCE_PATH;
 
 import javax.validation.Valid;
+import java.util.Objects;
+import java.util.Optional;
 import java.util.UUID;
 import org.apache.log4j.Logger;
 import org.openlmis.ao.reports.domain.EmbeddedReport;
+import org.openlmis.ao.reports.domain.EmbeddedReportCategory;
 import org.openlmis.ao.reports.dto.EmbeddedReportDto;
 import org.openlmis.ao.reports.exception.NotFoundMessageException;
 import org.openlmis.ao.reports.exception.ValidationMessageException;
+import org.openlmis.ao.reports.i18n.EmbeddedReportCategoryMessageKeys;
 import org.openlmis.ao.reports.i18n.EmbeddedReportsMessageKeys;
+import org.openlmis.ao.reports.repository.EmbeddedReportCategoryRepository;
 import org.openlmis.ao.reports.repository.EmbeddedReportRepository;
 import org.openlmis.ao.reports.service.PermissionService;
 import org.openlmis.ao.utils.Message;
@@ -27,12 +32,12 @@ import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
-
 
 @Controller
 @Transactional
@@ -45,6 +50,9 @@ public class EmbeddedReportController extends BaseController {
 
   @Autowired
   private EmbeddedReportRepository embeddedReportRepository;
+
+  @Autowired
+  private EmbeddedReportCategoryRepository embeddedReportCategoryRepository;
 
   @Autowired
   private PermissionService permissionService;
@@ -83,7 +91,7 @@ public class EmbeddedReportController extends BaseController {
     permissionService.canViewEmbeddedReports();
 
     Page<EmbeddedReport> embeddedReports = (category != null)
-        ? embeddedReportRepository.findAllByCategory(category, pageable)
+        ? embeddedReportRepository.findAllByCategoryName(category, pageable)
         : embeddedReportRepository.findAll(pageable);
 
     return Pagination.getPage(EmbeddedReportDto.newInstance(embeddedReports), pageable);
@@ -104,12 +112,13 @@ public class EmbeddedReportController extends BaseController {
     EmbeddedReport embeddedReportToUpdate = embeddedReportRepository.findByName(dto.getName());
     if (embeddedReportToUpdate == null) {
       LOGGER.debug("Creating new embedded report");
-      embeddedReportToUpdate = EmbeddedReport.newInstance(dto);
+      embeddedReportToUpdate = new EmbeddedReport();
+      updateReport(dto, embeddedReportToUpdate);
       embeddedReportToUpdate.setId(null);
     } else {
       LOGGER.debug("Existing embedded report found, updating");
       dto.setId(embeddedReportToUpdate.getId());
-      embeddedReportToUpdate = EmbeddedReport.newInstance(dto);
+      updateReport(dto, embeddedReportToUpdate);
     }
 
     try {
@@ -130,7 +139,7 @@ public class EmbeddedReportController extends BaseController {
    */
   @DeleteMapping(value = "/{id}")
   @ResponseStatus(HttpStatus.NO_CONTENT)
-  public void deleteTemplate(@PathVariable("id") UUID reportId) {
+  public void deleteEmbeddedReport(@PathVariable("id") UUID reportId) {
     permissionService.canViewEmbeddedReports();
     LOGGER.debug("Deleting embedded report");
     EmbeddedReport embeddedReport = embeddedReportRepository.findOne(reportId);
@@ -142,5 +151,53 @@ public class EmbeddedReportController extends BaseController {
       LOGGER.debug("Deleted embedded report with id: " + reportId);
     }
   }
+
+  /**
+   * Allows updating embedded report.
+   *
+   * @param id UUID of embedded report we want to update
+   */
+  @PutMapping(value = "/{id}")
+  @ResponseStatus(HttpStatus.OK)
+  @ResponseBody
+  public EmbeddedReportDto updateEmbeddedReport(@PathVariable("id") UUID id,
+      @Valid @RequestBody EmbeddedReportDto embeddedReportDto) {
+    permissionService.canViewEmbeddedReports();
+    if (null != embeddedReportDto.getId() && !Objects.equals(embeddedReportDto.getId(), id)) {
+      throw new ValidationMessageException(
+          EmbeddedReportsMessageKeys.ERROR_EMBEDDED_REPORT_ID_MISMATCH);
+    }
+
+    LOGGER.debug("Updating embedded report");
+    EmbeddedReport embeddedReport;
+    Optional<EmbeddedReport> embeddedReportOptional = embeddedReportRepository.findById(id);
+    if (embeddedReportOptional.isPresent()) {
+      embeddedReport = embeddedReportOptional.get();
+      updateReport(embeddedReportDto, embeddedReport);
+    } else {
+      throw new NotFoundMessageException(ERROR_EMBEDDED_REPORT_NOT_FOUND);
+    }
+    embeddedReportRepository.save(embeddedReport);
+
+    return EmbeddedReportDto.newInstance(embeddedReport);
+  }
+
+  private void updateReport(EmbeddedReportDto newReport, EmbeddedReport reportToUpdate) {
+    reportToUpdate.updateFrom(newReport);
+    if (newReport.getCategory() != null) {
+      EmbeddedReportCategory category = findCategory(newReport);
+      reportToUpdate.setCategory(category);
+    } else {
+      reportToUpdate.setCategory(null);
+    }
+  }
+
+  private EmbeddedReportCategory findCategory(EmbeddedReportDto newReport) {
+    return embeddedReportCategoryRepository
+        .findById(newReport.getCategory().getId())
+        .orElseThrow(() -> new NotFoundMessageException(
+            EmbeddedReportCategoryMessageKeys.ERROR_EMBEDDED_REPORT_CATEGORY_NOT_FOUND));
+  }
+
 
 }
