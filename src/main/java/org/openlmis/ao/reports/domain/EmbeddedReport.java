@@ -103,7 +103,9 @@ public class EmbeddedReport extends BaseEntity {
     exporter.setId(id);
     exporter.setName(name);
     exporter.setUrl(url);
-    exporter.setCategory(category);
+    if (category != null) {
+      exporter.setCategory(category);
+    }
     exporter.setEnabled(enabled);
   }
 
