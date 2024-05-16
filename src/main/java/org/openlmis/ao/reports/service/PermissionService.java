@@ -59,18 +59,19 @@ public class PermissionService {
 
   /**
    * Check whether the user has REPORTS_VIEW permission, throws an exception otherwise.
+   * The exception is Order Report which only requires ORDERS_VIEW permission.
    * @param templateId (optional) id of the report; verify only REPORTS_VIEW permission if null.
    */
   public void validatePermissionsToViewReports(UUID templateId) {
+    if (templateId != null) {
+      if (templateId.equals(ORDER_ID)) {
+        canViewOrders();
+        return;
+      } else if (templateId.equals(USER_REPORT_TEMPLATE_ID)) {
+        canMaganeUsers();
+      }
+    }
     checkPermission(REPORTS_VIEW);
-    if (templateId == null) {
-      return;
-    }
-    if (templateId.equals(ORDER_ID)) {
-      canViewOrders();
-    } else if (templateId.equals(USER_REPORT_TEMPLATE_ID)) {
-      canMaganeUsers();
-    }
   }
 
   /**
