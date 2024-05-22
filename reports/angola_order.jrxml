@@ -1,16 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- Created with Jaspersoft Studio version 6.20.5.final using JasperReports Library version 6.4.3  -->
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="order" pageWidth="595" pageHeight="842" orientation="Landscape" whenNoDataType="AllSectionsNoDetail" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" whenResourceMissingType="Error" uuid="6e843fe2-ce72-4257-a4c3-1df03728dc95">
-    <property name="com.jaspersoft.studio.data.defaultdataadapter" value="One Empty Record"/>
-    <property name="com.jaspersoft.studio.unit." value="pixel"/>
-    <property name="com.jaspersoft.studio.unit.pageHeight" value="pixel"/>
-    <property name="com.jaspersoft.studio.unit.pageWidth" value="pixel"/>
-    <property name="com.jaspersoft.studio.unit.topMargin" value="pixel"/>
-    <property name="com.jaspersoft.studio.unit.bottomMargin" value="pixel"/>
-    <property name="com.jaspersoft.studio.unit.leftMargin" value="pixel"/>
-    <property name="com.jaspersoft.studio.unit.rightMargin" value="pixel"/>
-    <property name="com.jaspersoft.studio.unit.columnWidth" value="pixel"/>
-    <property name="com.jaspersoft.studio.unit.columnSpacing" value="pixel"/>
     <property name="reportType" value="Order Report"/>
     <property name="isDisplayed" value="false"/>
     <import value="org.openlmis.ao.reports.dto.external.*"/>
@@ -54,7 +44,7 @@
     <title>
         <band height="110" splitType="Stretch">
             <staticText>
-                <reportElement x="170" y="0" width="382" height="79" forecolor="#3D9297" uuid="9425a6c9-4546-4c90-9119-7a7f300b6fb5"/>
+                <reportElement x="2" y="0" width="382" height="79" forecolor="#3D9297" uuid="9425a6c9-4546-4c90-9119-7a7f300b6fb5"/>
                 <textElement textAlignment="Center">
                     <font size="16" isBold="false"/>
                     <paragraph lineSpacing="Double" lineSpacingSize="2.0"/>
@@ -66,61 +56,58 @@ Lista de Pré-despacho de Medicamentos]]></text>
     </title>
     <pageHeader>
         <band height="185">
-            <property name="com.jaspersoft.studio.unit.height" value="px"/>
             <staticText>
-                <reportElement x="320" y="32" width="80" height="15" uuid="2ebe95a1-27cc-45b6-86c0-4fe603b2a68c"/>
+                <reportElement x="0" y="30" width="80" height="14" uuid="2ebe95a1-27cc-45b6-86c0-4fe603b2a68c"/>
                 <textElement textAlignment="Right" verticalAlignment="Middle"/>
                 <text><![CDATA[Instituição:]]></text>
             </staticText>
             <staticText>
-                <reportElement x="320" y="155" width="80" height="15" uuid="e6b5e990-9d52-4bc4-addd-e0d12a9e0545">
-                    <property name="com.jaspersoft.studio.unit.y" value="px"/>
-                </reportElement>
+                <reportElement x="0" y="156" width="80" height="14" uuid="e6b5e990-9d52-4bc4-addd-e0d12a9e0545"/>
                 <textElement textAlignment="Right" verticalAlignment="Middle"/>
                 <text><![CDATA[Fax:]]></text>
             </staticText>
             <staticText>
-                <reportElement x="320" y="110" width="80" height="15" uuid="e50f5e30-bc3e-48c6-a0cd-5fc2c4549f7a"/>
+                <reportElement x="0" y="114" width="80" height="14" uuid="e50f5e30-bc3e-48c6-a0cd-5fc2c4549f7a"/>
                 <textElement textAlignment="Right" verticalAlignment="Middle"/>
                 <text><![CDATA[Município:]]></text>
             </staticText>
             <staticText>
-                <reportElement x="320" y="125" width="80" height="15" uuid="41672a04-8b3f-4edb-9755-9ab38e5f5084"/>
+                <reportElement x="0" y="128" width="80" height="14" uuid="41672a04-8b3f-4edb-9755-9ab38e5f5084"/>
                 <textElement textAlignment="Right" verticalAlignment="Middle"/>
                 <text><![CDATA[Província:]]></text>
             </staticText>
             <staticText>
-                <reportElement x="320" y="140" width="80" height="15" uuid="5d8a3b43-4b11-4b19-bf7d-9c6491fb978f"/>
+                <reportElement x="0" y="142" width="80" height="14" uuid="5d8a3b43-4b11-4b19-bf7d-9c6491fb978f"/>
                 <textElement textAlignment="Right" verticalAlignment="Middle"/>
                 <text><![CDATA[Telefone:]]></text>
             </staticText>
             <staticText>
-                <reportElement x="320" y="17" width="80" height="15" uuid="102b0dd5-e20b-461b-9540-0eb0a71f38ce"/>
+                <reportElement x="0" y="16" width="80" height="14" uuid="102b0dd5-e20b-461b-9540-0eb0a71f38ce"/>
                 <textElement textAlignment="Right" verticalAlignment="Middle"/>
                 <text><![CDATA[À Abastecer:]]></text>
             </staticText>
             <staticText>
-                <reportElement x="320" y="47" width="80" height="15" uuid="62ee4443-5adc-4e23-964a-4059a379e61f"/>
+                <reportElement x="0" y="44" width="80" height="14" uuid="62ee4443-5adc-4e23-964a-4059a379e61f"/>
                 <textElement textAlignment="Right" verticalAlignment="Middle"/>
                 <text><![CDATA[Código:]]></text>
             </staticText>
             <staticText>
-                <reportElement x="320" y="95" width="80" height="15" uuid="4f9ec696-9521-48b0-86da-e67131811da6"/>
+                <reportElement x="0" y="100" width="80" height="14" uuid="4f9ec696-9521-48b0-86da-e67131811da6"/>
                 <textElement textAlignment="Right" verticalAlignment="Middle"/>
                 <text><![CDATA[Endereço:]]></text>
             </staticText>
             <staticText>
-                <reportElement x="320" y="0" width="80" height="15" uuid="b0ded7f9-4d1f-4f78-90bb-bf32b906dc78"/>
+                <reportElement x="0" y="0" width="80" height="14" uuid="b0ded7f9-4d1f-4f78-90bb-bf32b906dc78"/>
                 <textElement textAlignment="Right" verticalAlignment="Middle"/>
                 <text><![CDATA[Pedido Nº.:]]></text>
             </staticText>
             <textField isBlankWhenNull="true">
-                <reportElement key="" x="410" y="17" width="145" height="15" uuid="e1f25574-b3f7-4455-bbe7-0a57f9ee9da4"/>
+                <reportElement key="" x="98" y="16" width="332" height="14" uuid="e1f25574-b3f7-4455-bbe7-0a57f9ee9da4"/>
                 <textElement textAlignment="Left" verticalAlignment="Middle"/>
                 <textFieldExpression><![CDATA[$P{order}.getFacility().getName()]]></textFieldExpression>
             </textField>
             <textField isStretchWithOverflow="true" isBlankWhenNull="true">
-                <reportElement key="" x="410" y="0" width="145" height="15" isPrintWhenDetailOverflows="true" uuid="c3a4d043-8e85-48dc-8b3e-265cbd8df92a"/>
+                <reportElement key="" x="98" y="0" width="144" height="14" isPrintWhenDetailOverflows="true" uuid="c3a4d043-8e85-48dc-8b3e-265cbd8df92a"/>
                 <box>
                     <topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
                     <leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
@@ -133,62 +120,54 @@ Lista de Pré-despacho de Medicamentos]]></text>
                 <textFieldExpression><![CDATA[$P{order}.getOrderCode()]]></textFieldExpression>
             </textField>
             <textField isBlankWhenNull="true">
-                <reportElement key="" x="410" y="32" width="145" height="15" uuid="59b73e19-33f5-4605-8854-d58e0adc7283"/>
+                <reportElement key="" x="98" y="30" width="332" height="14" uuid="59b73e19-33f5-4605-8854-d58e0adc7283"/>
                 <textElement textAlignment="Left" verticalAlignment="Middle"/>
                 <textFieldExpression><![CDATA[$P{order}.getFacility().getName()]]></textFieldExpression>
             </textField>
             <textField isBlankWhenNull="true">
-                <reportElement key="" x="410" y="47" width="145" height="15" uuid="eabc21b2-8e7f-4fef-be54-a403f55b14b9">
-                    <property name="com.jaspersoft.studio.unit.y" value="pixel"/>
-                </reportElement>
+                <reportElement key="" x="98" y="44" width="252" height="14" uuid="eabc21b2-8e7f-4fef-be54-a403f55b14b9"/>
                 <textElement textAlignment="Left" verticalAlignment="Middle"/>
                 <textFieldExpression><![CDATA[$P{order}.getFacility().getCode()]]></textFieldExpression>
             </textField>
             <textField isBlankWhenNull="true">
-                <reportElement key="" x="410" y="110" width="145" height="15" uuid="6969131b-b903-4273-801e-b69945c2615b"/>
+                <reportElement key="" x="98" y="114" width="332" height="14" uuid="6969131b-b903-4273-801e-b69945c2615b"/>
                 <textElement textAlignment="Left" verticalAlignment="Middle"/>
                 <textFieldExpression><![CDATA[$P{order}.getThirdLevelFacility().getName()]]></textFieldExpression>
             </textField>
             <textField isBlankWhenNull="true">
-                <reportElement key="" x="410" y="95" width="145" height="15" uuid="af46019f-41a6-46a6-af27-8e5f64882e46"/>
+                <reportElement key="" x="98" y="100" width="145" height="14" uuid="af46019f-41a6-46a6-af27-8e5f64882e46"/>
                 <textElement textAlignment="Left" verticalAlignment="Middle"/>
             </textField>
             <textField isBlankWhenNull="true">
-                <reportElement key="" x="410" y="140" width="145" height="15" uuid="a42100af-d8f4-4a4c-b005-394ea577797f"/>
+                <reportElement key="" x="98" y="142" width="252" height="14" uuid="a42100af-d8f4-4a4c-b005-394ea577797f"/>
                 <textElement textAlignment="Left" verticalAlignment="Middle"/>
             </textField>
             <textField isBlankWhenNull="true">
-                <reportElement key="" x="410" y="125" width="145" height="15" uuid="82a6e7bb-330c-4e2d-992e-3ed08974dfe2"/>
+                <reportElement key="" x="98" y="128" width="332" height="14" uuid="82a6e7bb-330c-4e2d-992e-3ed08974dfe2"/>
                 <textElement textAlignment="Left" verticalAlignment="Middle"/>
                 <textFieldExpression><![CDATA[$P{order}.getSecondLevelFacility().getName()]]></textFieldExpression>
             </textField>
             <textField isBlankWhenNull="true">
-                <reportElement key="" x="410" y="155" width="145" height="15" uuid="abe3fdb1-aa3b-4233-ba3d-1353fa702441">
-                    <property name="com.jaspersoft.studio.unit.y" value="px"/>
-                </reportElement>
+                <reportElement key="" x="98" y="156" width="252" height="14" uuid="abe3fdb1-aa3b-4233-ba3d-1353fa702441"/>
                 <textElement textAlignment="Left" verticalAlignment="Middle"/>
             </textField>
             <staticText>
-                <reportElement x="320" y="77" width="80" height="15" uuid="4fda4606-836a-42d1-ab78-958c80ece173"/>
+                <reportElement x="0" y="86" width="80" height="14" uuid="4fda4606-836a-42d1-ab78-958c80ece173"/>
                 <textElement textAlignment="Right" verticalAlignment="Middle"/>
                 <text><![CDATA[Programa:]]></text>
             </staticText>
             <textField isBlankWhenNull="true">
-                <reportElement key="" x="410" y="77" width="145" height="15" uuid="ec729721-8dae-4052-9de6-19ceddb911f4">
-                    <property name="com.jaspersoft.studio.unit.y" value="pixel"/>
-                </reportElement>
+                <reportElement key="" x="98" y="86" width="252" height="14" uuid="ec729721-8dae-4052-9de6-19ceddb911f4"/>
                 <textElement textAlignment="Left" verticalAlignment="Middle"/>
                 <textFieldExpression><![CDATA[$P{order}.getProgram().getName()]]></textFieldExpression>
             </textField>
             <staticText>
-                <reportElement x="240" y="62" width="160" height="15" uuid="e2bdbab0-f2d4-4385-a81b-5af93670a1f8"/>
+                <reportElement x="0" y="58" width="80" height="28" uuid="e2bdbab0-f2d4-4385-a81b-5af93670a1f8"/>
                 <textElement textAlignment="Right" verticalAlignment="Middle"/>
                 <text><![CDATA[Instalação de Abastecimento:]]></text>
             </staticText>
             <textField isBlankWhenNull="true">
-                <reportElement key="" x="410" y="62" width="145" height="15" uuid="9ec024e5-b4c0-4737-a36b-9a5efaa2d8cd">
-                    <property name="com.jaspersoft.studio.unit.y" value="pixel"/>
-                </reportElement>
+                <reportElement key="" x="98" y="65" width="332" height="14" uuid="9ec024e5-b4c0-4737-a36b-9a5efaa2d8cd"/>
                 <textElement textAlignment="Left" verticalAlignment="Middle"/>
                 <textFieldExpression><![CDATA[$P{order}.getSupplyingFacility().getName()]]></textFieldExpression>
             </textField>
@@ -235,11 +214,8 @@ Lista de Pré-despacho de Medicamentos]]></text>
     </columnHeader>
     <detail>
         <band height="25" splitType="Immediate">
-            <property name="com.jaspersoft.studio.unit.height" value="pixel"/>
             <textField isStretchWithOverflow="true">
-                <reportElement style="Row" stretchType="RelativeToTallestObject" mode="Opaque" x="140" y="0" width="260" height="25" uuid="31100a38-97d8-400d-bf98-3b9039cd4d01">
-                    <property name="com.jaspersoft.studio.unit.height" value="pixel"/>
-                </reportElement>
+                <reportElement style="Row" stretchType="RelativeToTallestObject" mode="Opaque" x="140" y="0" width="260" height="25" uuid="31100a38-97d8-400d-bf98-3b9039cd4d01"/>
                 <box padding="3">
                     <pen lineColor="#3D9297"/>
                     <topPen lineWidth="1.0" lineStyle="Solid" lineColor="#3D9297"/>
@@ -253,10 +229,7 @@ Lista de Pré-despacho de Medicamentos]]></text>
                 <textFieldExpression><![CDATA[$F{orderable}.getFullProductName()]]></textFieldExpression>
             </textField>
             <textField isStretchWithOverflow="true">
-                <reportElement style="Row" stretchType="RelativeToTallestObject" mode="Opaque" x="475" y="0" width="80" height="25" uuid="5e3e13b2-3de1-4613-927b-3d352faaed85">
-                    <property name="com.jaspersoft.studio.unit.height" value="pixel"/>
-                    <property name="com.jaspersoft.studio.unit.width" value="pixel"/>
-                </reportElement>
+                <reportElement style="Row" stretchType="RelativeToTallestObject" mode="Opaque" x="475" y="0" width="80" height="25" uuid="5e3e13b2-3de1-4613-927b-3d352faaed85"/>
                 <box padding="3">
                     <pen lineColor="#3D9297"/>
                     <topPen lineWidth="1.0" lineStyle="Solid" lineColor="#3D9297"/>
@@ -284,9 +257,7 @@ Lista de Pré-despacho de Medicamentos]]></text>
                 <textFieldExpression><![CDATA[$V{REPORT_COUNT}]]></textFieldExpression>
             </textField>
             <textField isStretchWithOverflow="true">
-                <reportElement style="Row" stretchType="RelativeToTallestObject" mode="Opaque" x="50" y="0" width="90" height="25" uuid="5c934beb-6a56-414f-b44b-039716390a2f">
-                    <property name="com.jaspersoft.studio.unit.height" value="pixel"/>
-                </reportElement>
+                <reportElement style="Row" stretchType="RelativeToTallestObject" mode="Opaque" x="50" y="0" width="90" height="25" uuid="5c934beb-6a56-414f-b44b-039716390a2f"/>
                 <box padding="3">
                     <pen lineColor="#3D9297"/>
                     <topPen lineWidth="1.0" lineStyle="Solid" lineColor="#3D9297"/>
@@ -300,9 +271,7 @@ Lista de Pré-despacho de Medicamentos]]></text>
                 <textFieldExpression><![CDATA[$F{orderable}.getProductCode()]]></textFieldExpression>
             </textField>
             <textField isStretchWithOverflow="true">
-                <reportElement style="Row" stretchType="RelativeToTallestObject" mode="Opaque" x="400" y="0" width="75" height="25" uuid="325890b1-a7bb-4c2b-b9aa-0149b25d9968">
-                    <property name="com.jaspersoft.studio.unit.height" value="pixel"/>
-                </reportElement>
+                <reportElement style="Row" stretchType="RelativeToTallestObject" mode="Opaque" x="400" y="0" width="75" height="25" uuid="325890b1-a7bb-4c2b-b9aa-0149b25d9968"/>
                 <box padding="3">
                     <pen lineColor="#3D9297"/>
                     <topPen lineWidth="1.0" lineStyle="Solid" lineColor="#3D9297"/>
@@ -426,10 +395,7 @@ Lista de Pré-despacho de Medicamentos]]></text>
                 <text><![CDATA[Data:]]></text>
             </staticText>
             <textField isBlankWhenNull="true">
-                <reportElement key="" x="430" y="80" width="122" height="20" uuid="f76d2dd7-8927-41db-a38d-6a8b43807d84">
-                    <property name="com.jaspersoft.studio.unit.x" value="pixel"/>
-                    <property name="com.jaspersoft.studio.unit.width" value="pixel"/>
-                </reportElement>
+                <reportElement key="" x="430" y="80" width="122" height="20" uuid="f76d2dd7-8927-41db-a38d-6a8b43807d84"/>
                 <box>
                     <topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
                     <leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
@@ -501,9 +467,7 @@ Lista de Pré-despacho de Medicamentos]]></text>
                 <text><![CDATA[Data:]]></text>
             </staticText>
             <staticText>
-                <reportElement x="0" y="5" width="280" height="20" uuid="88faf2a1-accc-4685-908c-3a65a2ed8fe6">
-                    <property name="com.jaspersoft.studio.unit.y" value="pixel"/>
-                </reportElement>
+                <reportElement x="0" y="5" width="280" height="20" uuid="88faf2a1-accc-4685-908c-3a65a2ed8fe6"/>
                 <text><![CDATA[Explique quaisquer discrepâncias ou Danos]]></text>
             </staticText>
         </band>
