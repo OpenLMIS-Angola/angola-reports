@@ -2,7 +2,6 @@ package org.openlmis.ao.reports.service;
 
 import static java.io.File.createTempFile;
 import static java.util.Collections.singletonList;
-import static net.sf.jasperreports.engine.export.JRHtmlExporterParameter.IS_USING_IMAGES_TO_ALIGN;
 import static org.apache.commons.io.FileUtils.writeByteArrayToFile;
 import static org.openlmis.ao.reports.i18n.JasperMessageKeys.ERROR_JASPER_FILE_CREATION;
 import static org.openlmis.ao.reports.i18n.MessageKeys.ERROR_IO;
@@ -189,7 +188,6 @@ public class JasperReportsViewService {
    */
   private void setExportParams(JasperReportsMultiFormatView jasperView) {
     Map<JRExporterParameter, Object> reportFormatMap = new HashMap<>();
-    reportFormatMap.put(IS_USING_IMAGES_TO_ALIGN, false);
     jasperView.setExporterParameters(reportFormatMap);
   }
 

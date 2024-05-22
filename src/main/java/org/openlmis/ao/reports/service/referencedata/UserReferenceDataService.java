@@ -1,6 +1,6 @@
 package org.openlmis.ao.reports.service.referencedata;
 
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.openlmis.ao.reports.dto.external.DetailedRoleAssignmentDto;
 import org.openlmis.ao.reports.dto.external.ProgramDto;
 import org.openlmis.ao.reports.dto.external.ResultDto;
