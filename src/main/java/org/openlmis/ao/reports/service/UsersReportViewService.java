@@ -2,7 +2,7 @@ package org.openlmis.ao.reports.service;
 
 import net.sf.jasperreports.engine.data.JRBeanCollectionDataSource;
 import org.apache.commons.collections.CollectionUtils;
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.openlmis.ao.reports.dto.external.DetailedRoleAssignmentDto;
 import org.openlmis.ao.reports.dto.external.RightAssignmentDto;
 import org.openlmis.ao.reports.dto.external.SupervisoryNodeDto;
