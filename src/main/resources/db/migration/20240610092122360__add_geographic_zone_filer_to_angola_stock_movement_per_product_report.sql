@@ -24,7 +24,7 @@ VALUES
         'name',
         'district',
         false,
-        / api / geographicZones,
+        '/api/geographicZones',
         name,
         'a565bb23-1d39-4a9a-8717-a7ff46706243',
         'GET',
