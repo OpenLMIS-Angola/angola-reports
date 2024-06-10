@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- Created with Jaspersoft Studio version 6.6.0.final using JasperReports Library version 6.6.0  -->
+<!-- Created with Jaspersoft Studio version 6.20.5.final using JasperReports Library version 6.20.5-3efcf2e67f959db3888d79f73dde2dbd7acb4f8e  -->
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="daily_balance" printOrder="Horizontal" pageWidth="842" pageHeight="595" orientation="Landscape" whenNoDataType="AllSectionsNoDetail" columnWidth="802" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" whenResourceMissingType="Error" uuid="548a4d5f-1cb0-4fa0-b5f9-40a07c579f42">
 	<property name="com.jaspersoft.studio.data.sql.SQLQueryDesigner.sash.w1" value="0"/>
 	<property name="com.jaspersoft.studio.data.sql.SQLQueryDesigner.sash.w2" value="1000"/>
-	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="DataAdapter.xml"/>
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="Angola"/>
 	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
 	<property name="net.sf.jasperreports.export.html.embed.image" value="true"/>
 	<property name="net.sf.jasperreports.print.keep.full.text" value="true"/>
@@ -97,8 +97,19 @@
 	</parameter>
 	<parameter name="imagesDirectory" class="java.lang.String" isForPrompting="false"/>
 	<parameter name="timeZone" class="java.lang.String" isForPrompting="false"/>
+	<parameter name="district" class="java.lang.String">
+		<property name="displayName" value="District"/>
+		<property name="selectExpression" value="/api/reports/districts"/>
+		<property name="selectProperty" value="name"/>
+		<property name="displayProperty" value="name"/>
+		<property name="required" value="false"/>
+	</parameter>
 	<queryString language="plsql">
-		<![CDATA[select
+		<![CDATA[WITH RECURSIVE findChildZones AS (
+  SELECT * FROM referencedata.geographic_zones WHERE name = $P{district}::varchar
+  UNION ALL
+  SELECT referencedata.geographic_zones.* FROM referencedata.geographic_zones JOIN findChildZones ON findChildZones.id = referencedata.geographic_zones.parentId)
+select
 	reasons.reasoncategory as reasonCategory,
 	reasons.reasontype as reasonType,
 	CONCAT_WS(': ',products.code,products.fullproductname) AS product,
@@ -117,8 +128,10 @@ FROM
 	left JOIN referencedata.programs AS programs ON programs.id = stock_events.programid
 	left JOIN referencedata.orderables AS products ON products.id = line_items.orderableid
 	left JOIN referencedata.facilities AS facilities ON (facilities.id = stock_events.facilityid or facilities.id = nodes.referenceid)
+	left JOIN referencedata.geographic_zones AS zones ON zones.id = facilities.geographiczoneid
 WHERE
 	($P{program} IS NULL OR $X{IN, programs.name, programList})
+	AND ($P{district}::varchar IS NULL OR zones.id IN (SELECT id FROM findChildZones))
 	AND ($P{productId} IS NULL OR products.id = $P{productId}::uuid)
 	AND ($P{facility} IS NULL OR facilities.name = $P{facility}::varchar)
 	and
@@ -143,23 +156,34 @@ order by "date" desc]]>
 			<band height="60" splitType="Stretch">
 				<property name="com.jaspersoft.studio.unit.height" value="px"/>
 				<textField>
-					<reportElement x="515" y="20" width="155" height="20" uuid="cc820e7b-871c-4b12-b833-b0435778cfef"/>
+					<reportElement x="515" y="20" width="155" height="40" uuid="cc820e7b-871c-4b12-b833-b0435778cfef"/>
 					<textFieldExpression><![CDATA[java.time.format.DateTimeFormatter.ofPattern("yyyy.MM.dd").format(java.time.LocalDate.parse($P{startDate}.toString())) + " - " + 
 java.time.format.DateTimeFormatter.ofPattern("yyyy.MM.dd").format(java.time.LocalDate.parse($P{endDate}.toString()))]]></textFieldExpression>
 				</textField>
 				<textField>
-					<reportElement key="" x="670" y="20" width="125" height="20" uuid="eecc1140-a4a9-4bd6-9d4e-4828b52367fe">
+					<reportElement key="" x="670" y="20" width="125" height="40" uuid="eecc1140-a4a9-4bd6-9d4e-4828b52367fe">
 						<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
 					</reportElement>
 					<textElement textAlignment="Left"/>
 					<textFieldExpression><![CDATA[java.time.format.DateTimeFormatter.ofPattern("yyyy.MM.dd").format(java.time.LocalDate.now());]]></textFieldExpression>
 				</textField>
 				<textField>
-					<reportElement x="0" y="20" width="280" height="40" uuid="ef0b0cb1-79c4-4f50-96c2-374e38663441"/>
+					<reportElement x="0" y="20" width="160" height="40" uuid="ef0b0cb1-79c4-4f50-96c2-374e38663441"/>
+					<textFieldExpression><![CDATA[($P{district} == null) ? "Todos" : $P{district}]]></textFieldExpression>
+				</textField>
+				<staticText>
+					<reportElement x="0" y="0" width="160" height="20" uuid="b7eb243f-bfd2-4c2b-9d4b-55a96d943688"/>
+					<textElement textAlignment="Left" verticalAlignment="Middle">
+						<font isBold="true"/>
+					</textElement>
+					<text><![CDATA[Zona Geográfica:]]></text>
+				</staticText>
+				<textField>
+					<reportElement x="160" y="20" width="180" height="40" uuid="ef0b0cb1-79c4-4f50-96c2-374e38663441"/>
 					<textFieldExpression><![CDATA[($P{facility} == null) ? "Todos" : $P{facility}]]></textFieldExpression>
 				</textField>
 				<staticText>
-					<reportElement x="0" y="0" width="280" height="20" uuid="b7eb243f-bfd2-4c2b-9d4b-55a96d943688"/>
+					<reportElement x="160" y="0" width="180" height="20" uuid="b7eb243f-bfd2-4c2b-9d4b-55a96d943688"/>
 					<textElement textAlignment="Left" verticalAlignment="Middle">
 						<font isBold="true"/>
 					</textElement>
@@ -182,14 +206,14 @@ java.time.format.DateTimeFormatter.ofPattern("yyyy.MM.dd").format(java.time.Loca
 					<text><![CDATA[Data dos dados:]]></text>
 				</staticText>
 				<staticText>
-					<reportElement x="280" y="0" width="235" height="20" uuid="96e25b35-81c2-417a-a700-b8d7107a533c"/>
+					<reportElement x="340" y="0" width="175" height="20" uuid="96e25b35-81c2-417a-a700-b8d7107a533c"/>
 					<textElement textAlignment="Left" verticalAlignment="Middle">
 						<font isBold="true"/>
 					</textElement>
 					<text><![CDATA[Programa:]]></text>
 				</staticText>
 				<textField>
-					<reportElement x="280" y="20" width="235" height="40" uuid="6218362b-b764-454e-ac91-26df903c0c8c"/>
+					<reportElement x="340" y="20" width="175" height="40" uuid="6218362b-b764-454e-ac91-26df903c0c8c"/>
 					<textFieldExpression><![CDATA[($P{programUpdated} == null) ? "Todas" : $P{programUpdated}]]></textFieldExpression>
 				</textField>
 			</band>
@@ -269,7 +293,7 @@ java.time.format.DateTimeFormatter.ofPattern("yyyy.MM.dd").format(java.time.Loca
 						<pen lineWidth="0.0"/>
 					</graphicElement>
 				</rectangle>
-				<textField isStretchWithOverflow="true" isBlankWhenNull="false">
+				<textField textAdjust="StretchHeight" isBlankWhenNull="false">
 					<reportElement x="525" y="0" width="145" height="30" printWhenGroupChanges="Group1" uuid="eb5409f1-cdfe-481f-a56f-17a78f1d2b6f"/>
 					<box>
 						<pen lineColor="#D2D2D2"/>
@@ -299,7 +323,7 @@ java.time.format.DateTimeFormatter.ofPattern("yyyy.MM.dd").format(java.time.Loca
 					</textElement>
 					<textFieldExpression><![CDATA[$F{quantity}]]></textFieldExpression>
 				</textField>
-				<textField isStretchWithOverflow="true" isBlankWhenNull="false">
+				<textField textAdjust="StretchHeight" isBlankWhenNull="false">
 					<reportElement x="380" y="0" width="145" height="30" printWhenGroupChanges="Group1" uuid="bf8ba146-45c8-4ebd-8559-a2c699deb860">
 						<property name="com.jaspersoft.studio.unit.y" value="px"/>
 						<property name="com.jaspersoft.studio.unit.width" value="px"/>
@@ -317,7 +341,7 @@ java.time.format.DateTimeFormatter.ofPattern("yyyy.MM.dd").format(java.time.Loca
 					</textElement>
 					<textFieldExpression><![CDATA[$F{reasonType}.equals("CREDIT") ? $F{facilityNode} : $F{originalFacility}]]></textFieldExpression>
 				</textField>
-				<textField isStretchWithOverflow="true" isBlankWhenNull="false">
+				<textField textAdjust="StretchHeight" isBlankWhenNull="false">
 					<reportElement positionType="Float" x="0" y="0" width="60" height="30" printWhenGroupChanges="Group1" uuid="595da585-6415-4491-b206-8fe5a54f62d9">
 						<property name="com.jaspersoft.studio.unit.y" value="px"/>
 						<property name="com.jaspersoft.studio.unit.x" value="px"/>
@@ -335,7 +359,7 @@ java.time.format.DateTimeFormatter.ofPattern("yyyy.MM.dd").format(java.time.Loca
 					</textElement>
 					<textFieldExpression><![CDATA[$F{reasonType}.equals("CREDIT") ? "Entrada" : "Saida"]]></textFieldExpression>
 				</textField>
-				<textField isStretchWithOverflow="true" isBlankWhenNull="false">
+				<textField textAdjust="StretchHeight" isBlankWhenNull="false">
 					<reportElement x="670" y="0" width="70" height="30" printWhenGroupChanges="Group1" uuid="20144e2e-60cf-4e49-ac65-e9a8dbf20b5b"/>
 					<box>
 						<pen lineColor="#D2D2D2"/>
@@ -349,7 +373,7 @@ java.time.format.DateTimeFormatter.ofPattern("yyyy.MM.dd").format(java.time.Loca
 					</textElement>
 					<textFieldExpression><![CDATA[java.time.format.DateTimeFormatter.ofPattern("yyyy.MM.dd").format(java.time.LocalDate.parse($F{date}.toString()))]]></textFieldExpression>
 				</textField>
-				<textField isStretchWithOverflow="true" isBlankWhenNull="false">
+				<textField textAdjust="StretchHeight" isBlankWhenNull="false">
 					<reportElement positionType="Float" x="60" y="0" width="320" height="30" printWhenGroupChanges="Group1" uuid="00e2cf1f-2e2c-4e42-afcf-3a23d1a01260">
 						<property name="com.jaspersoft.studio.unit.y" value="px"/>
 						<property name="com.jaspersoft.studio.unit.x" value="px"/>
