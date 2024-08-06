@@ -130,12 +130,14 @@ FROM (
 		JOIN referencedata.facilities AS facilities ON facilities.id = stock_cards.facilityid
 		JOIN referencedata.programs AS programs ON programs.id = stock_cards.programid 
 		JOIN referencedata.geographic_zones AS zones ON zones.id = facilities.geographiczoneid
+		JOIN referencedata.geographic_levels AS levels ON levels.id = zones.levelid
 	where 
 		($P{program} IS NULL OR $X{IN, programs.name, programList})
 		AND ($P{district}::varchar IS NULL OR zones.id IN (SELECT id FROM findChildZones))
 		AND ($P{productId} IS NULL OR products.id = $P{productId}::uuid)
 		AND ($P{facility} IS NULL OR facilities.name = $P{facility}::varchar)
 		AND ($P{date} IS NULL OR soh.occurreddate::varchar <= $P{date}::varchar)
+		AND levels.levelnumber <> 4
 ) AS soh_data
 WHERE soh_data.date_rank = 1 AND soh_data.product_version_rank = 1
 GROUP BY soh_data.product, soh_data.zone, soh_data.facility]]>
