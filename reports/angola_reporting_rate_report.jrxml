@@ -193,7 +193,7 @@ facilityWithParentZone AS (
     JOIN referencedata.geographic_levels AS levels ON zones.levelid = levels.id
   WHERE
     levels.levelnumber = 4
-),
+)
 SELECT
   facilityWithParentZone.parentZone AS geographiczonename,
   COUNT(CASE WHEN status_change.createddate IS NOT NULL THEN 1 END) AS completed,
