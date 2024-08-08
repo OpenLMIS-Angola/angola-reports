@@ -181,9 +181,21 @@ ORDER BY referencedata.processing_periods.startdate]]>
 ),
 findLastPeriods AS (
   SELECT * FROM referencedata.processing_periods WHERE startdate <= (SELECT startdate FROM referencedata.processing_periods WHERE name = $P{Period}::varchar) ORDER BY startdate DESC LIMIT 1
-)
+),
+facilityWithParentZone AS (
+  SELECT
+    facilities.id AS facility_id,
+    COALESCE(parent_zones.name, zones.name) AS parentZone
+  FROM
+    referencedata.facilities AS facilities
+    JOIN referencedata.geographic_zones AS zones ON facilities.geographicZoneId = zones.id
+    LEFT JOIN referencedata.geographic_zones AS parent_zones ON zones.parentId = parent_zones.id
+    JOIN referencedata.geographic_levels AS levels ON zones.levelid = levels.id
+  WHERE
+    levels.levelnumber = 4
+),
 SELECT
-  referencedata.geographic_zones.name AS geographiczonename,
+  facilityWithParentZone.parentZone AS geographiczonename,
   COUNT(CASE WHEN status_change.createddate IS NOT NULL THEN 1 END) AS completed,
   COUNT(CASE WHEN referencedata.processing_periods.enddate + (CASE WHEN $P{DueDays}::varchar IS NULL THEN 15 ELSE $P{DueDays}::int END) + 1 >= status_change.createddate THEN 1 END) AS ontime,
   COUNT(CASE WHEN status_change.createddate IS NULL THEN 1 END) AS missed,
@@ -201,6 +213,7 @@ FROM referencedata.facilities
     rgps.requisitiongroupid = rg.id AND rgps.programid = program.id
   JOIN referencedata.supported_programs sp ON
     sp.programid = program.id AND sp.facilityid = referencedata.facilities.id
+  JOIN facilityWithParentZone ON facilities.id = facilityWithParentZone.facility_id
   LEFT JOIN referencedata.processing_periods ON
    referencedata.processing_periods.id IN (SELECT id FROM findLastPeriods)
   LEFT JOIN requisition.requisitions ON
