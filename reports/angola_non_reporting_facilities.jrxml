@@ -170,54 +170,49 @@ facilityWithProvince AS (
     LEFT JOIN referencedata.geographic_zones AS parent_zones ON zones.parentId = parent_zones.id
     LEFT JOIN referencedata.geographic_zones AS grandparent_zones ON parent_zones.parentId = grandparent_zones.id
     JOIN referencedata.geographic_levels AS levels ON zones.levelid = levels.id
+),
+    deduped_facilities AS (
+        SELECT DISTINCT
+            referencedata.facilities.id AS facility_id,
+            referencedata.processing_periods.name AS period,
+            referencedata.facilities.code AS code,
+            referencedata.facilities.name AS facility,
+            referencedata.facility_types.name AS type,
+            facilityWithParentZone.parentZone AS zone,
+            facilityWithProvince.provinceName AS provincia,
+            program.name as programName
+        FROM referencedata.facilities
+        JOIN referencedata.geographic_zones ON referencedata.facilities.geographiczoneid = referencedata.geographic_zones.id
+        JOIN referencedata.geographic_zones provincia ON referencedata.geographic_zones.parentid = provincia.id
+        JOIN referencedata.programs program ON $X{IN, program.name, programList}
+        JOIN referencedata.requisition_group_members rgm ON facilityid = referencedata.facilities.id
+        JOIN referencedata.requisition_groups rg ON rgm.requisitiongroupid = rg.id
+        JOIN referencedata.requisition_group_program_schedules rgps ON rgps.requisitiongroupid = rg.id AND rgps.programid = program.id
+        JOIN referencedata.supported_programs sp ON sp.programid = program.id AND sp.facilityid = referencedata.facilities.id
+        JOIN facilityWithParentZone ON facilities.id = facilityWithParentZone.facility_id
+        JOIN facilityWithProvince ON facilities.id = facilityWithProvince.facility_id
+        LEFT JOIN referencedata.facility_types ON referencedata.facilities.typeid = referencedata.facility_types.id
+        LEFT JOIN referencedata.processing_periods ON referencedata.processing_periods.name = $P{period}::varchar
+        LEFT JOIN requisition.requisitions ON requisition.requisitions.facilityid = referencedata.facilities.id
+            AND requisition.requisitions.processingperiodid = referencedata.processing_periods.id
+            AND ($P{program}::varchar IS NULL OR requisition.requisitions.programid = program.id)
+            AND requisition.requisitions.emergency = false
+        LEFT JOIN (SELECT DISTINCT ON (requisitionid) requisitionid, createddate FROM requisition.status_changes WHERE requisition.status_changes.status = 'SUBMITTED') status_change
+            ON status_change.requisitionid = requisition.requisitions.id
+        WHERE referencedata.facilities.active = true
+            AND referencedata.facilities.enabled = true
+            AND ($P{district}::varchar IS NULL OR referencedata.geographic_zones.id IN (SELECT id FROM findChildZones))
+            AND status_change IS NULL
+            AND sp.active = true
+        ORDER BY referencedata.facilities.code
+    )
+    SELECT * FROM deduped_facilities
 )
-SELECT
-  referencedata.processing_periods.name AS period,
-  referencedata.facilities.code AS code,
-  referencedata.facilities.name AS facility,
-  referencedata.facility_types.name AS type,
-  facilityWithParentZone.parentZone AS zone,
-  facilityWithProvince.provinceName AS provincia,
-  program.name as programName
-FROM referencedata.facilities
-  JOIN referencedata.geographic_zones ON
-   referencedata.facilities.geographiczoneid = referencedata.geographic_zones.id
-   JOIN referencedata.geographic_zones provincia ON
-   referencedata.geographic_zones.parentid = provincia.id
-   JOIN referencedata.programs program ON
-   $X{IN, program.name, programList}
-  JOIN referencedata.requisition_group_members rgm ON
-   facilityid = referencedata.facilities.id
-  JOIN referencedata.requisition_groups rg ON
-    rgm.requisitiongroupid = rg.id
-  JOIN referencedata.requisition_group_program_schedules rgps ON
-    rgps.requisitiongroupid = rg.id AND rgps.programid = program.id
-  JOIN referencedata.supported_programs sp ON
-    sp.programid = program.id AND sp.facilityid = referencedata.facilities.id
-  JOIN facilityWithParentZone ON facilities.id = facilityWithParentZone.facility_id
-  JOIN facilityWithProvince ON facilities.id = facilityWithProvince.facility_id
-   LEFT JOIN referencedata.facility_types ON
-   referencedata.facilities.typeid = referencedata.facility_types.id
-  LEFT JOIN referencedata.processing_periods ON
-   referencedata.processing_periods.name = $P{period}::varchar
-  LEFT JOIN requisition.requisitions ON
-    requisition.requisitions.facilityid = referencedata.facilities.id
-    AND requisition.requisitions.processingperiodid =  referencedata.processing_periods.id
-    AND ($P{program}::varchar IS NULL OR requisition.requisitions.programid = program.id)
-    AND requisition.requisitions.emergency = false
-  LEFT JOIN (SELECT DISTINCT ON (requisitionid) requisitionid, createddate FROM requisition.status_changes WHERE requisition.status_changes.status = 'SUBMITTED') status_change
-   ON status_change.requisitionid = requisition.requisitions.id
-WHERE
-   referencedata.facilities.active = true
-   AND referencedata.facilities.enabled = true
-   AND ($P{district}::varchar IS NULL OR referencedata.geographic_zones.id IN (SELECT id FROM findChildZones))
-   AND status_change IS NULL
-   AND sp.active = true
-   ORDER BY referencedata.facilities.code
-)
-SELECT *, round(((total::numeric - completed::numeric)/total::numeric*100),0) as notSubmitted FROM table1
-join table2 on table1.period = table2.period
-order by table2.period, table2.programName, table2.facility, table2.code]]>
+SELECT *,
+    round(((total::numeric - completed::numeric)/total::numeric*100),0) as notSubmitted
+FROM table1
+JOIN table2 ON table1.period = table2.period
+ORDER BY table2.period, table2.programName, table2.facility, table2.code]]>
 	</queryString>
 	<field name="period" class="java.lang.String"/>
 	<field name="code" class="java.lang.String"/>
