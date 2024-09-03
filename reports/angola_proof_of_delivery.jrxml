@@ -59,7 +59,7 @@ FROM
   JOIN
   fulfillment.orders ord
     ON ord.id = shipment.orderid
-  JOIN
+  LEFT JOIN  -- Changed from JOIN to LEFT JOIN
   referencedata.processing_periods period
     ON period.id = ord.processingperiodid
   JOIN
@@ -76,72 +76,43 @@ FROM
     ON pod_li.proofofdeliveryid = pod.id
   JOIN
   referencedata.orderables orderable
-    ON orderable.id = pod_li.orderableid
+    ON orderable.id = pod_li.orderableid AND orderable.versionnumber = pod_li.orderableversionnumber
   JOIN
   referencedata.dispensables dispensable
     ON dispensable.id = orderable.dispensableid
-  LEFT JOIN referencedata.orderable_identifiers pod_orderable_identifier ON orderable.id = pod_orderable_identifier.orderableid
+  LEFT JOIN
+	  fulfillment.shipment_line_items shipment_li
+	    ON shipment_li.shipmentid = shipment.id
+	       AND pod_li.orderableid = shipment_li.orderableid
+	       AND pod_li.orderableversionnumber = shipment_li.orderableversionnumber
+	       AND ( (pod_li.lotid IS NULL AND shipment_li.lotid IS NULL) OR pod_li.lotid = shipment_li.lotid )
+  JOIN referencedata.orderable_identifiers pod_orderable_identifier ON orderable.id = pod_orderable_identifier.orderableid
                                                        AND (pod_orderable_identifier.key = 'tradeItem' OR pod_orderable_identifier.key = 'commodityType')
-  LEFT JOIN
+  JOIN
   fulfillment.order_line_items order_li
-    ON order_li.orderid = ord.id AND (pod_li.orderableid = order_li.orderableid OR order_li.orderableid IN
-    (
-      SELECT
-        o.id
-      FROM
-        referencedata.orderables o
-        LEFT JOIN
-        referencedata.orderable_identifiers order_orderable_identifier
+    ON order_li.orderid = shipment.orderid AND order_li.orderableid = shipment_li.orderableid
+	AND order_li.orderableid IN (
+        SELECT o.id
+        FROM referencedata.orderables o
+        LEFT JOIN referencedata.orderable_identifiers order_orderable_identifier
           ON o.id = order_orderable_identifier.orderableid
-             AND (order_orderable_identifier.key = 'tradeItem' OR order_orderable_identifier.key = 'commodityType')
-        LEFT JOIN
-        referencedata.trade_item_classifications trade_item_classification
-          ON trade_item_classification.tradeitemid = order_orderable_identifier.value::uuid
-        LEFT JOIN
-        referencedata.commodity_types commodity_type
-          ON order_orderable_identifier.value::uuid = commodity_type.id
-             OR (commodity_type.classificationid = trade_item_classification.classificationid AND commodity_type.classificationsystem = trade_item_classification.classificationsystem)
-        LEFT JOIN
-        referencedata.trade_items trade_item
+        LEFT JOIN referencedata.trade_items trade_item
           ON order_orderable_identifier.value::uuid = trade_item.id
-             OR EXISTS
-             (
-                 SELECT
-                   1
-                 FROM
-                   referencedata.trade_item_classifications trade_item_classification
-                 WHERE
-                   trade_item_classification.tradeitemid = trade_item.id
-                   AND trade_item_classification.classificationid = commodity_type.classificationid
-                   AND trade_item_classification.classificationsystem = commodity_type.classificationsystem
-             )
-      WHERE
-        NOT EXISTS
-        (
-            SELECT
-              1
-            FROM
-              referencedata.dispensable_attributes orderer_dispensable_attribute
-              JOIN
-              referencedata.dispensable_attributes pod_dispensable_attribute
-                ON pod_dispensable_attribute.dispensableid = dispensable.id
-            WHERE
-              orderer_dispensable_attribute.dispensableid = o.dispensableid
-              AND orderer_dispensable_attribute.key = pod_dispensable_attribute.key
-              AND orderer_dispensable_attribute.value <> pod_dispensable_attribute.value
+        LEFT JOIN referencedata.commodity_types commodity_type
+          ON order_orderable_identifier.value::uuid = commodity_type.id
+        WHERE NOT EXISTS (
+          SELECT 1
+          FROM referencedata.dispensable_attributes orderer_dispensable_attribute
+          JOIN referencedata.dispensable_attributes shipment_dispensable_attribute
+            ON shipment_dispensable_attribute.dispensableid = orderer_dispensable_attribute.dispensableid
+          WHERE orderer_dispensable_attribute.key = shipment_dispensable_attribute.key
+            AND orderer_dispensable_attribute.value <> shipment_dispensable_attribute.value
         )
-        AND (pod_orderable_identifier.value::uuid = trade_item.id OR pod_orderable_identifier.value::uuid = commodity_type.id)
-    ))
-  LEFT JOIN
-  fulfillment.shipment_line_items shipment_li
-    ON shipment_li.shipmentid = shipment.id
-       AND pod_li.orderableid = shipment_li.orderableid
-       AND
-       (
-         (pod_li.lotid IS NULL
-          AND shipment_li.lotid IS NULL)
-         OR pod_li.lotid = shipment_li.lotid
-       )
+        AND (
+          pod_orderable_identifier.value::uuid = trade_item.id
+          OR pod_orderable_identifier.value::uuid = commodity_type.id
+        )
+      )
   LEFT JOIN
   referencedata.dispensable_attributes dispensing_unit
     ON dispensing_unit.dispensableid = dispensable.id
@@ -163,6 +134,7 @@ FROM
 LEFT JOIN
   referencedata.orderables order_orderable
     ON order_orderable.id = order_li.orderableid
+    AND order_orderable.versionnumber = order_li.orderableversionnumber
 WHERE
   pod.id = $P{id}::uuid
 ORDER BY
@@ -274,7 +246,7 @@ ORDER BY
 						<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#DDDDDD"/>
 					</box>
 					<textElement verticalAlignment="Middle"/>
-					<textFieldExpression><![CDATA[$P{decimalFormat}.format($F{quantityordered}).toString()]]></textFieldExpression>
+                    <textFieldExpression><![CDATA[$F{quantityordered} != null ? $P{decimalFormat}.format($F{quantityordered}).toString() : ""]]></textFieldExpression>
 				</textField>
 				<textField isStretchWithOverflow="true" isBlankWhenNull="true">
 					<reportElement stretchType="RelativeToTallestObject" mode="Opaque" x="620" y="0" width="80" height="20" backcolor="#F0F0F0" uuid="fee7ae94-a0b2-4ffe-84d0-9624f2b76451">
