@@ -9,6 +9,8 @@ import static org.openlmis.ao.reports.web.ReportTypes.STOCK_CARD_REPORT;
 import static org.openlmis.ao.reports.web.ReportTypes.STOCK_CARD_SUMMARY_REPORT;
 import static org.openlmis.ao.reports.web.ReportTypes.USERS_REPORT;
 
+import java.text.DecimalFormat;
+import java.text.DecimalFormatSymbols;
 import java.time.Clock;
 import java.util.List;
 import java.util.Map;
@@ -33,6 +35,7 @@ import org.openlmis.ao.reports.service.PermissionService;
 import org.openlmis.ao.utils.AuthenticationHelper;
 import org.openlmis.ao.utils.Message;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
@@ -69,6 +72,18 @@ public class JasperTemplateController extends BaseController {
 
   @Autowired
   private AuthenticationHelper authenticationHelper;
+
+  @Value("${dateTimeFormat}")
+  private String dateTimeFormat;
+
+  @Value("${dateFormat}")
+  private String dateFormat;
+
+  @Value("${groupingSeparator}")
+  private String groupingSeparator;
+
+  @Value("${groupingSize}")
+  private String groupingSize;
 
   /**
    * Adding report templates with ".jrxml" format to database.
@@ -184,18 +199,26 @@ public class JasperTemplateController extends BaseController {
     Map<String, Object> map = jasperTemplateService.mapRequestParametersToTemplate(
         request, template
     );
-    String fileName = jasperReportsViewService.getFilename(template, map);
+
     map.put("format", format);
     map.put("imagesDirectory", "images/");
     map.put("timeZone", clock.getZone().getId());
     UserDto currentUser = authenticationHelper.getCurrentUser();
     map.put("user", currentUser.printName());
+    map.put("dateTimeFormat", dateTimeFormat);
+    map.put("dateFormat", dateFormat);
+    DecimalFormatSymbols decimalFormatSymbols = new DecimalFormatSymbols();
+    decimalFormatSymbols.setGroupingSeparator(groupingSeparator.charAt(0));
+    DecimalFormat decimalFormat = new DecimalFormat("", decimalFormatSymbols);
+    decimalFormat.setGroupingSize(Integer.parseInt(groupingSize));
+    map.put("decimalFormat", decimalFormat);
 
     map.put(JRParameter.REPORT_VIRTUALIZER, virtualizer);
 
     JasperReportsMultiFormatView jasperView =
         jasperReportsViewService.getJasperReportsView(template, request);
 
+    String fileName = jasperReportsViewService.getFilename(template, map);
     String contentDisposition = "inline; filename=" + fileName + "." + format;
 
     jasperView
