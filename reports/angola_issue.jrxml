@@ -87,7 +87,7 @@
 	left join referencedata.geographic_zones gz3 on gz3.id = gz2.parentid
 	left join stockmanagement.nodes n on n.id = seli.destinationid
 	left join referencedata.facilities fReceiver on fReceiver.id = n.referenceid
-	where se.id::varchar = '656d46a2-dd34-4641-8f8a-96c2c4808b40'::varchar
+	where se.id::varchar = $P{stockEventId}::varchar
 	and productVersionRank = 1
 ORDER BY facilityNameReceiver]]>
     </queryString>
